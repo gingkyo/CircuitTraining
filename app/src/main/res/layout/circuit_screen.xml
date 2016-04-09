@@ -19,7 +19,6 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:onClick="onClick"
             android:text="Add Wire"/>
         <Button
             android:id="@+id/button_select_gate"
@@ -28,7 +27,6 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:onClick="onClick"
             android:text="Select Gate"/>
         <FrameLayout
             android:id="@+id/image_source_frame"
@@ -51,7 +49,6 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:onClick="onClick"
             android:text="Undo Last"/>
 
     </LinearLayout>

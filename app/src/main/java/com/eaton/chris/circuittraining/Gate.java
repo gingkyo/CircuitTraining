@@ -83,6 +83,9 @@ class Gate {
         }
         return true;
     }
+    public String getGateType(){
+        return gateType;
+    }
 }
 class AndGate extends Gate
 {

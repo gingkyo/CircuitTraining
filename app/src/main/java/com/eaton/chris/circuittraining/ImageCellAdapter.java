@@ -15,22 +15,10 @@ public class ImageCellAdapter extends BaseAdapter
 
     public ViewGroup parentView = null;
     private Context context;
-    private View.OnDragListener dragListener;
-    // private View.OnTouchListener touchListener;
 
-    public ImageCellAdapter (Context c, View.OnDragListener dl){//},View.OnTouchListener tl) {
+    public ImageCellAdapter (Context c){
         context = c;
-        dragListener = dl;
-        //touchListener=tl;
     }
-
-/**
- */
-// Methods
-
-    /**
-     * getCount
-     */
 
     public int getCount()
     {
@@ -47,12 +35,6 @@ public class ImageCellAdapter extends BaseAdapter
         return position;
     }
 
-    /**
-     * getView
-     * Return a view object for the grid.
-     *
-     * @return ImageCell
-     */
     public View getView (int position, View convertView, ViewGroup parent)
     {
         Resources res = context.getResources ();
@@ -77,11 +59,11 @@ public class ImageCellAdapter extends BaseAdapter
         v.cellNumber = position;
         //v.mGrid = (GridView) mParentView;
         v.isEmpty = true;
-        v.setOnDragListener (dragListener);
+        v.setOnDragListener ((View.OnDragListener)context);
         v.setBackgroundResource (R.color.cell_empty);
 
         v.setOnTouchListener((View.OnTouchListener)context);
-        v.setOnClickListener ((View.OnClickListener) context);
+       // v.setOnClickListener ((View.OnClickListener) context);
 
         return v;
     }

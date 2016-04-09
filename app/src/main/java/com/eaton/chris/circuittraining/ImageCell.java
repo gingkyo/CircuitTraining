@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ImageCell extends ImageView
         implements DragSource, DropTarget
@@ -40,8 +41,9 @@ public class ImageCell extends ImageView
         Drawable d = sourceView.getDrawable ();
         if (d != null) {
             this.setGate(source.getGate());
-            this.setImageDrawable (d);
-            this.invalidate ();
+            this.setImageDrawable(d);
+            this.invalidate();
+            //this.setOnLongClickListener();
         }
     }
     public boolean onDragEnter (DragSource source) {
