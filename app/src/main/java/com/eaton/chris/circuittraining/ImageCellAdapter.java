@@ -60,7 +60,7 @@ public class ImageCellAdapter extends BaseAdapter
         //v.mGrid = (GridView) mParentView;
         v.isEmpty = true;
         v.setOnDragListener ((View.OnDragListener)context);
-        v.setBackgroundResource (R.color.cell_empty);
+        v.setBackgroundResource (R.color.transparent);
 
         v.setOnTouchListener((View.OnTouchListener)context);
        // v.setOnClickListener ((View.OnClickListener) context);

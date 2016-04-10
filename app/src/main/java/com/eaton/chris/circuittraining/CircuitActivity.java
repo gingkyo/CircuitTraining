@@ -2,11 +2,16 @@ package com.eaton.chris.circuittraining;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,8 +26,10 @@ public class CircuitActivity extends Activity
         View.OnLongClickListener,
         View.OnTouchListener
 {
+    WireSurface wireSurface;
     private DragSource dragSource;
     private ImageCell lastNewCell=null;
+    private ImageView startOfWire=null;
     private boolean addWireMode=false;
 
     private ImageView powerButton_1,powerButton_2,powerButton_3;
@@ -33,14 +40,18 @@ public class CircuitActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.circuit_screen);
 
+        wireSurface= (WireSurface)findViewById(R.id.surfaceView_wireCanvas);
         powerButton_1 =(ImageView)findViewById(R.id.imageView_power_1);
         powerButton_1.setOnClickListener(this);
+        powerButton_1.setOnLongClickListener(this);
 
         powerButton_2 =(ImageView)findViewById(R.id.imageView_power_2);
         powerButton_2.setOnClickListener(this);
+        powerButton_1.setOnLongClickListener(this);
 
         powerButton_3 =(ImageView)findViewById(R.id.imageView_power_3);
         powerButton_3.setOnClickListener(this);
+        powerButton_1.setOnLongClickListener(this);
 
         addWire=(Button)findViewById(R.id.button_add_wire);
         addWire.setOnClickListener(this);
@@ -76,21 +87,20 @@ public boolean startDrag (View v) {
 
     ClipData dragData = ClipData.newPlainText("","");
     View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
-    v.startDrag (dragData, shadowView, ds, 0);
+    v.startDrag(dragData, shadowView, ds, 0);
     return true;
 }
     public void setPowerButton(View view){
         ImageView powerButton=(ImageView)findViewById(view.getId());
         String tag=powerButton.getTag().toString();
-        if(tag.equals("power_off")){
+        if(powerButtonIsLive(view)){
+            powerButton.setImageResource(R.drawable.power_off);
+            powerButton.setTag("power_off");
+        } else{
             powerButton.setImageResource(R.drawable.power_on);
             powerButton.setTag("power_on");
         }
-        if(tag.equals("power_on")){
-            powerButton.setImageResource(R.drawable.power_off);
-            powerButton.setTag("power_off");
-        }
-        toast(tag);
+
     }
     public void addNewImageToScreen(int resourceId) {
         if (lastNewCell != null) lastNewCell.setVisibility(View.GONE);
@@ -125,22 +135,48 @@ public boolean startDrag (View v) {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.button_add_wire:
-                addWireMode=true;
-                break;
-            case R.id.button_select_gate:
-                toast("click");
+        if(!addWireMode){
+            int id= (view.getId());
+            if(id== R.id.button_select_gate) {
                 addNewImageToScreen(R.drawable.or_gate);
-                break;
-            default:
+            } else if(id==R.id.button_add_wire){
+                wireSurface.canDraw=true;
+                wireSurface.invalidate();
+            } else{
                 setPowerButton(view);
-                break;
+            }
+        } else{
         }
     }
     @Override
     public boolean onLongClick(View view) {
         if(addWireMode){
+            if(startOfWire==null){
+                startOfWire=(ImageView) view;
+                return true;
+            }
+            if(view.equals(startOfWire)){
+                toast("line cannot start and end at same place");
+                addWireMode=false;
+                return addWireMode;
+            }
+            if(viewIsPowerButton(view)){
+                toast("cannot end a wire at a power button");
+                addWireMode=false;
+                return addWireMode;
+            }
+            boolean wireIsLive=false;
+            if(viewIsPowerButton(startOfWire)){
+                wireIsLive=powerButtonIsLive(startOfWire);
+            }
+            ImageCell gateIcon=(ImageCell)view;
+            Gate gate=gateIcon.getGate();
+            wireIsLive=gate.getOutput(gate.getGateType());
+            Wire wire =new Wire(wireIsLive);
+            gate.addConnection(wire);
+
+            //draw the wire to canvas
+            //save the coordinates of the wire
             /*need to reference whether this is the start of the wire or the end of the wire.
             * if it is the start of the wire then a refernce should be saved (perhaps in Wire?),
             * and a marker set so that the next longClick can represent the end of the wire.
@@ -210,5 +246,13 @@ public boolean startDrag (View v) {
                 break;
         }
         return false;
+    }
+    public boolean powerButtonIsLive(View view){
+        String buttonTag=view.getTag().toString();
+        return buttonTag.equals("power_on");
+    }
+    public boolean viewIsPowerButton(View view){
+        return view.equals(powerButton_1)|view.equals(powerButton_2)
+                |view.equals(powerButton_3);
     }
 }

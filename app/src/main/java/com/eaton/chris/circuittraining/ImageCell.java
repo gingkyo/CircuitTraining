@@ -34,7 +34,7 @@ public class ImageCell extends ImageView
     public void onDrop (DragSource source) {
 
         isEmpty = false;
-        int bg = isEmpty ? R.color.cell_empty : R.color.cell_filled;
+        int bg = isEmpty ? R.color.transparent : R.color.transparent;
         setBackgroundResource (bg);
 
         ImageView sourceView = (ImageView) source;
@@ -54,7 +54,7 @@ public class ImageCell extends ImageView
     }
     public boolean onDragExit (DragSource source) {
         if (cellNumber < 0) return false;
-        int bg = isEmpty ? R.color.cell_empty : R.color.cell_filled;
+        int bg = isEmpty ? R.color.transparent : R.color.transparent;
         setBackgroundResource (bg);
         return true;
     }

@@ -3,7 +3,7 @@ package com.eaton.chris.circuittraining;
 class Gate {
     private Wire conn1;
     private Wire conn2;
-    private boolean output;
+    //private boolean output;
     private String gateType;
 
     public static Gate logicGateFactory(int resourceId) {
@@ -27,16 +27,16 @@ class Gate {
     }
 
     public Gate(boolean output,String gateType){
-        this.output=output;
+        //this.output=output;
         this.gateType=gateType;
     }
     public Gate(String gateType){
 
-        output=false;
+       // output=false;
         this.gateType=gateType;
     }
-    public boolean setOutput(String gateType){
-        if(!isConnected()){
+    public boolean getOutput(String gateType){
+        if(isConnected()){
             switch(gateType){
                 case "notGate":
                     return !conn1.getStatus();
@@ -45,18 +45,18 @@ class Gate {
                 case "orGate":
                     return conn1.getStatus() |conn2.getStatus();
                 case "xorGate":
-                    if(setOutput("andGate")){
+                    if(getOutput("andGate")){
                         return false;
                     }else{
-                        setOutput("orGate");
+                        getOutput("orGate");
                     }
                 case "nandGate":
-                    return !setOutput("andGate");
+                    return !getOutput("andGate");
                 case "norGate":
-                    return !setOutput("orGate");
+                    return !getOutput("orGate");
                 case "xnorGate":
                     boolean dbleNegative=!conn1.getStatus() && !conn2.getStatus();
-                    return setOutput("andGate") | dbleNegative;
+                    return getOutput("andGate") | dbleNegative;
             }
         }
         return false;
