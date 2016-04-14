@@ -72,15 +72,15 @@ class Gate {
         if(isConnected()){
             return false;
         }
-        if(conn1.equals(null)){
+       // if(conn1==null){
             conn1=newConn;
             if(gateType.equals("notGate")){
                 return true;
             }
-        }
-        else{
-            conn2=newConn;
-        }
+       // }
+//        else{
+//            conn2=newConn;
+//        }
         return true;
     }
     public String getGateType(){

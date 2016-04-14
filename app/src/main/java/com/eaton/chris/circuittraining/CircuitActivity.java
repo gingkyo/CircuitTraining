@@ -34,6 +34,15 @@ public class CircuitActivity extends Activity
 
     private ImageView powerButton_1,powerButton_2,powerButton_3;
     private Button addWire,selectGate,undoLast;
+    /*
+    * TODO Add constants for power button placements - this is because they are not part of the
+    * TODO Canvas view Object.
+    * */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +101,6 @@ public boolean startDrag (View v) {
 }
     public void setPowerButton(View view){
         ImageView powerButton=(ImageView)findViewById(view.getId());
-        String tag=powerButton.getTag().toString();
         if(powerButtonIsLive(view)){
             powerButton.setImageResource(R.drawable.power_off);
             powerButton.setTag("power_off");
@@ -122,8 +130,6 @@ public boolean startDrag (View v) {
 
             newView.setOnClickListener(this);
             newView.setOnTouchListener(this);
-            toast(newView.toString());
-
         }
     }
 
@@ -140,8 +146,7 @@ public boolean startDrag (View v) {
             if(id== R.id.button_select_gate) {
                 addNewImageToScreen(R.drawable.or_gate);
             } else if(id==R.id.button_add_wire){
-                wireSurface.canDraw=true;
-                wireSurface.invalidate();
+                addWireMode=true;
             } else{
                 setPowerButton(view);
             }
@@ -165,7 +170,7 @@ public boolean startDrag (View v) {
                 addWireMode=false;
                 return addWireMode;
             }
-            boolean wireIsLive=false;
+            boolean wireIsLive;
             if(viewIsPowerButton(startOfWire)){
                 wireIsLive=powerButtonIsLive(startOfWire);
             }
@@ -174,15 +179,15 @@ public boolean startDrag (View v) {
             wireIsLive=gate.getOutput(gate.getGateType());
             Wire wire =new Wire(wireIsLive);
             gate.addConnection(wire);
+            float startX=startOfWire.getWidth()+startOfWire.getX();
+            float startY=(startOfWire.getHeight()/2)+startOfWire.getY();
+            float endY=(gateIcon.getHeight()/2)+gateIcon.getY();
 
-            //draw the wire to canvas
-            //save the coordinates of the wire
-            /*need to reference whether this is the start of the wire or the end of the wire.
-            * if it is the start of the wire then a refernce should be saved (perhaps in Wire?),
-            * and a marker set so that the next longClick can represent the end of the wire.
-            * if it is the end of the wire, then might need to check this is a valid cell to connect
-            * a wire to (ie. isEmpty =false or hasGate?) and then add the wire. this selection should take the
-            * user out of wire mode also.*/
+            wireSurface.setLineCoords(startX,startY,gateIcon.getX(),endY);
+            wireSurface.isNewWire=true;
+            wireSurface.invalidate();
+            addWireMode=false;
+            startOfWire=null;
         }
 
         return false;

@@ -63,7 +63,8 @@ public class ImageCellAdapter extends BaseAdapter
         v.setBackgroundResource (R.color.transparent);
 
         v.setOnTouchListener((View.OnTouchListener)context);
-       // v.setOnClickListener ((View.OnClickListener) context);
+        //v.setOnLongClickListener((View.OnLongClickListener)context);
+        //v.setOnClickListener ((View.OnClickListener) context);
 
         return v;
     }

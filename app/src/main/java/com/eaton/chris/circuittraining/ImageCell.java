@@ -3,6 +3,7 @@ package com.eaton.chris.circuittraining;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class ImageCell extends ImageView
             this.setGate(source.getGate());
             this.setImageDrawable(d);
             this.invalidate();
-            //this.setOnLongClickListener();
+            this.setOnLongClickListener((View.OnLongClickListener)getContext());
         }
     }
     public boolean onDragEnter (DragSource source) {
