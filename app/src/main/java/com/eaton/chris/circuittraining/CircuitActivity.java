@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CircuitActivity extends Activity
@@ -31,13 +32,10 @@ public class CircuitActivity extends Activity
     private ImageCell lastNewCell=null;
     private ImageView startOfWire=null;
     private boolean addWireMode=false;
+    private TextView addWireLabel;
 
     private ImageView powerButton_1,powerButton_2,powerButton_3;
     private Button addWire,selectGate,undoLast;
-    /*
-    * TODO Add constants for power button placements - this is because they are not part of the
-    * TODO Canvas view Object.
-    * */
 
     @Override
     protected void onResume() {
@@ -56,11 +54,11 @@ public class CircuitActivity extends Activity
 
         powerButton_2 =(ImageView)findViewById(R.id.imageView_power_2);
         powerButton_2.setOnClickListener(this);
-        powerButton_1.setOnLongClickListener(this);
+        powerButton_2.setOnLongClickListener(this);
 
         powerButton_3 =(ImageView)findViewById(R.id.imageView_power_3);
         powerButton_3.setOnClickListener(this);
-        powerButton_1.setOnLongClickListener(this);
+        powerButton_3.setOnLongClickListener(this);
 
         addWire=(Button)findViewById(R.id.button_add_wire);
         addWire.setOnClickListener(this);
@@ -70,6 +68,9 @@ public class CircuitActivity extends Activity
 
         undoLast=(Button)findViewById(R.id.button_undo_gate);
         undoLast.setOnClickListener(this);
+
+        addWireLabel=(TextView)findViewById(R.id.textView_addWireLabel);
+        addWireLabel.setVisibility(View.INVISIBLE);
 
         GridView gridView = (GridView) findViewById(R.id.image_grid_view);
 
@@ -146,11 +147,12 @@ public boolean startDrag (View v) {
             if(id== R.id.button_select_gate) {
                 addNewImageToScreen(R.drawable.or_gate);
             } else if(id==R.id.button_add_wire){
-                addWireMode=true;
+                setAddWireMode(true);
+            } else if(id==R.id.button_undo_gate){
+                toast("TODO UNDO LAST BUTTON");
             } else{
                 setPowerButton(view);
             }
-        } else{
         }
     }
     @Override
@@ -162,14 +164,15 @@ public boolean startDrag (View v) {
             }
             if(view.equals(startOfWire)){
                 toast("line cannot start and end at same place");
-                addWireMode=false;
+                setAddWireMode(false);
                 return addWireMode;
             }
             if(viewIsPowerButton(view)){
                 toast("cannot end a wire at a power button");
-                addWireMode=false;
+                setAddWireMode(false);
                 return addWireMode;
             }
+
             boolean wireIsLive;
             if(viewIsPowerButton(startOfWire)){
                 wireIsLive=powerButtonIsLive(startOfWire);
@@ -179,15 +182,16 @@ public boolean startDrag (View v) {
             wireIsLive=gate.getOutput(gate.getGateType());
             Wire wire =new Wire(wireIsLive);
             gate.addConnection(wire);
-            float startX=startOfWire.getWidth()+startOfWire.getX();
+            float startX=startOfWire.getX();
+            if(!viewIsPowerButton(startOfWire))
+                startX+=startOfWire.getWidth();
             float startY=(startOfWire.getHeight()/2)+startOfWire.getY();
             float endY=(gateIcon.getHeight()/2)+gateIcon.getY();
 
             wireSurface.setLineCoords(startX,startY,gateIcon.getX(),endY);
             wireSurface.isNewWire=true;
             wireSurface.invalidate();
-            addWireMode=false;
-            startOfWire=null;
+            setAddWireMode(false);
         }
 
         return false;
@@ -259,5 +263,15 @@ public boolean startDrag (View v) {
     public boolean viewIsPowerButton(View view){
         return view.equals(powerButton_1)|view.equals(powerButton_2)
                 |view.equals(powerButton_3);
+    }
+    public void setAddWireMode(boolean isAddWireMode){
+        addWireMode=isAddWireMode;
+        startOfWire=null;
+        if(addWireMode){
+            addWireLabel.setVisibility(View.VISIBLE);
+        } else {
+            addWireLabel.setVisibility(View.INVISIBLE);
+        }
+
     }
 }

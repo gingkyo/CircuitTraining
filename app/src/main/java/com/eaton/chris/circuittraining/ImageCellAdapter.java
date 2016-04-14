@@ -57,14 +57,11 @@ public class ImageCellAdapter extends BaseAdapter
         }
 
         v.cellNumber = position;
-        //v.mGrid = (GridView) mParentView;
         v.isEmpty = true;
         v.setOnDragListener ((View.OnDragListener)context);
         v.setBackgroundResource (R.color.transparent);
 
         v.setOnTouchListener((View.OnTouchListener)context);
-        //v.setOnLongClickListener((View.OnLongClickListener)context);
-        //v.setOnClickListener ((View.OnClickListener) context);
 
         return v;
     }

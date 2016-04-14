@@ -60,7 +60,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/circuitTopPanel"
-        android:layout_above="@+id/circuitInfoPanel"
         android:id="@+id/circuitSwitchPanel"
 
         >
@@ -93,6 +92,18 @@
             android:id="@+id/imageView_power_3"
             android:src="@drawable/power_off"
             android:tag="power_off"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="*Wire*\nMode"
+            android:id="@+id/textView_addWireLabel"
+            android:layout_alignBottom="@+id/circuitSwitchPanel"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:paddingBottom="10dp" />
     </LinearLayout>
 
     <FrameLayout
