@@ -20,7 +20,9 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Add Wire"/>
+            android:text="Add Wire"
+            android:style="@style/buttonStyling"
+            />
         <Button
             android:id="@+id/button_select_gate"
             android:layout_width="wrap_content"
@@ -28,7 +30,9 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Select Gate"/>
+            android:text="Select Gate"
+            android:style="@style/buttonStyling"
+            />
         <FrameLayout
             android:id="@+id/image_source_frame"
             android:layout_width="@dimen/add_image_width"
@@ -50,7 +54,9 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Undo Last"/>
+            android:text="Undo Last"
+            android:style="@style/buttonStyling"
+            />
 
     </LinearLayout>
 

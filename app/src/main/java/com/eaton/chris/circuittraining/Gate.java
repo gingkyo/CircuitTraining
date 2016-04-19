@@ -1,31 +1,44 @@
 package com.eaton.chris.circuittraining;
 
+import java.util.ArrayList;
+
 class Gate {
     private Wire conn1;
     private Wire conn2;
     //private boolean output;
     private String gateType;
 
-    public static Gate logicGateFactory(int resourceId) {
-        switch (resourceId) {
-            case R.drawable.and_gate:
-                return new AndGate();
-            case R.drawable.nand_gate:
-                return new NandGate();
-            case R.drawable.nor_gate:
-                return new NorGate();
-            case R.drawable.not_gate:
-                return new NotGate();
-            case R.drawable.or_gate:
-                return new OrGate();
-            case R.drawable.xnor_gate:
-                return new XnorGate();
-            case R.drawable.xor_gate:
-                return new XorGate();
+    public int getGateImageByName() {
+        switch (gateType) {
+            case "andGate":
+                return R.drawable.and_gate;
+            case "nandGate":
+                return R.drawable.nand_gate;
+            case "norGate":
+                return R.drawable.nor_gate;
+            case "notGate":
+                return R.drawable.not_gate;
+            case "orGate":
+                return R.drawable.or_gate;
+            case "xnorGate":
+                return R.drawable.xnor_gate;
+            case "xorGate":
+                return R.drawable.xor_gate;
         }
-        return null;
+        return 0;
     }
+    public static ArrayList<Gate> buildFullGateList() {
+        ArrayList<Gate>gates=new ArrayList<>();
+        gates.add(new AndGate());
+        gates.add(new NandGate());
+        gates.add(new NorGate());
+        gates.add(new NotGate());
+        gates.add(new OrGate());
+        gates.add(new XnorGate());
+        gates.add(new XorGate());
 
+        return gates;
+    }
     public Gate(boolean output,String gateType){
         //this.output=output;
         this.gateType=gateType;

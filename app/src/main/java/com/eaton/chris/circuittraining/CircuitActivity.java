@@ -2,6 +2,7 @@ package com.eaton.chris.circuittraining;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -122,7 +123,7 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            newView.setGate(Gate.logicGateFactory(resourceId));
+            //newView.setGate(Gate.logicGateFactory(resourceId));
             newView.setImageResource(resourceId);
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
@@ -145,7 +146,9 @@ public boolean startDrag (View v) {
         if(!addWireMode){
             int id= (view.getId());
             if(id== R.id.button_select_gate) {
-                addNewImageToScreen(R.drawable.or_gate);
+                Intent selectGate =new Intent(CircuitActivity.this,SelectGateActivity.class);
+                startActivity(selectGate);
+                //addNewImageToScreen(R.drawable.or_gate);
             } else if(id==R.id.button_add_wire){
                 setAddWireMode(true);
             } else if(id==R.id.button_undo_gate){
@@ -165,18 +168,20 @@ public boolean startDrag (View v) {
             if(view.equals(startOfWire)){
                 toast("line cannot start and end at same place");
                 setAddWireMode(false);
-                return addWireMode;
+                startOfWire=null;
+                return addWireMode;//break?
             }
             if(viewIsPowerButton(view)){
                 toast("cannot end a wire at a power button");
                 setAddWireMode(false);
-                return addWireMode;
+                startOfWire=null;
+                return addWireMode;//break??
             }
 
             boolean wireIsLive;
             if(viewIsPowerButton(startOfWire)){
                 wireIsLive=powerButtonIsLive(startOfWire);
-            }
+            }//TODO check this logic - this should be else as the above only covers powerbuttons
             ImageCell gateIcon=(ImageCell)view;
             Gate gate=gateIcon.getGate();
             wireIsLive=gate.getOutput(gate.getGateType());
@@ -191,6 +196,7 @@ public boolean startDrag (View v) {
             wireSurface.setLineCoords(startX,startY,gateIcon.getX(),endY);
             wireSurface.isNewWire=true;
             wireSurface.invalidate();
+            startOfWire=null;
             setAddWireMode(false);
         }
 
