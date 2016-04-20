@@ -123,7 +123,7 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            //newView.setGate(Gate.logicGateFactory(resourceId));
+            //newView.setGate(Gate.logicGateFactory(resourceId));TODO THIS IS WHAT IS CRASHING THE WIRE ADD FUNCTION
             newView.setImageResource(resourceId);
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
