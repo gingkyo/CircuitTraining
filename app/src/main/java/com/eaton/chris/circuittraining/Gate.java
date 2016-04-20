@@ -3,26 +3,29 @@ package com.eaton.chris.circuittraining;
 import java.util.ArrayList;
 
 class Gate {
-    private Wire conn1;
-    private Wire conn2;
+    protected Wire conn1;
+    protected Wire conn2;
     //private boolean output;
-    private String gateType;
+    protected String gateType;
+    protected int gateInfoResID;
+    protected int gateDrawableResID;
+
     public static int getGateDescByName(String gateName){
         switch (gateName) {
             case "andGate":
-                return R.string.andGate;
+                return R.string.and_gate;
             case "nandGate":
-                return R.string.nandGate;
+                return R.string.nand_gate;
             case "norGate":
-                return R.string.norGate;
+                return R.string.nor_gate;
             case "notGate":
-                return R.string.notGate;
+                return R.string.not_gate;
             case "orGate":
-                return R.string.orGate;
+                return R.string.or_gate;
             case "xnorGate":
-                return R.string.xnorGate;
+                return R.string.xnor_gate;
             case "xorGate":
-                return R.string.xorGate;
+                return R.string.xor_gate;
         }
         return 0;
     }
@@ -45,6 +48,25 @@ class Gate {
                 return R.drawable.xor_gate;
         }
         return 0;
+    }
+    public static Gate buildGate(String gateType){
+        switch(gateType){
+            case "andGate":
+                return new AndGate();
+            case "nandGate":
+                return new NandGate();
+            case "norGate":
+                return new NorGate();
+            case "notGate":
+                return new NotGate();
+            case "orGate":
+                return new OrGate();
+            case "xnorGate":
+                return new XnorGate();
+            case "xorGate":
+                return new XorGate();
+        }
+        return null;
     }
     public static ArrayList<Gate> buildFullGateList() {
         ArrayList<Gate>gates=new ArrayList<>();
@@ -116,49 +138,75 @@ class Gate {
         return true;
     }
     public String getGateType(){
+
         return gateType;
+    }
+    public int getGateInfoResID(){
+        return gateInfoResID;
+    }
+    public int getGateDrawableResID(){
+        return gateDrawableResID;
     }
 }
 class AndGate extends Gate
 {
     public AndGate(){
         super("andGate");
+        gateInfoResID=R.string.and_gate;
+        gateDrawableResID=R.drawable.and_gate;
     }
 }
 class OrGate extends Gate
 {
     public OrGate(){
+
         super("orGate");
+        gateInfoResID=R.string.or_gate;
+        gateDrawableResID=R.drawable.or_gate;
     }
 }
 class XorGate extends Gate
 {
     public XorGate(){
+
         super("xorGate");
+        gateInfoResID=R.string.xor_gate;
+        gateDrawableResID=R.drawable.xor_gate;
     }
 }
 class NandGate extends Gate
 {
     public NandGate(){
+
         super(true,"nandGate");
+        gateInfoResID=R.string.nand_gate;
+        gateDrawableResID=R.drawable.nand_gate;
     }
 }
 class NorGate extends Gate
 {
     public NorGate(){
+
         super(true,"norGate");
+        gateInfoResID=R.string.nor_gate;
+        gateDrawableResID=R.drawable.nor_gate;
     }
 }
 class NotGate extends Gate
 {
     public NotGate(){
         super("notGate");
+        gateInfoResID=R.string.not_gate;
+        gateDrawableResID=R.drawable.not_gate;
     }
 }
 class XnorGate extends Gate
 {
     public XnorGate(){
+
         super(true,"xnorGate");
+        gateInfoResID=R.string.xnor_gate;
+        gateDrawableResID=R.drawable.xnor_gate;
     }
 }
 class Wire

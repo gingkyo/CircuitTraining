@@ -72,7 +72,7 @@ class GateListAdapter extends ArrayAdapter<Gate>{
         Gate gateItem=gates.get(position);
         String gateType=gateItem.getGateType();
         ((ImageView)convertView.findViewById(R.id.gateList_imageView))
-                .setImageResource(Gate.getGateImageByName(gateType));
+                .setImageResource(gateItem.gateDrawableResID);
         ((TextView)convertView.findViewById(R.id.gateList_label_textView))
                 .setText(gateType);
         Button button=(Button)convertView.findViewById(R.id.gateList_info_button);

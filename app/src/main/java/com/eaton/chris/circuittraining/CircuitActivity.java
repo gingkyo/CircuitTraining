@@ -30,6 +30,7 @@ public class CircuitActivity extends Activity
 {
     WireSurface wireSurface;
     private DragSource dragSource;
+    private Gate currentDraggableGate=null;
     private ImageCell lastNewCell=null;
     private ImageView startOfWire=null;
     private boolean addWireMode=false;
@@ -112,7 +113,7 @@ public boolean startDrag (View v) {
         }
 
     }
-    public void addNewImageToScreen(int resourceId) {
+    public void addNewImageToScreen() {
         if (lastNewCell != null) lastNewCell.setVisibility(View.GONE);
 
         FrameLayout imageHolder = (FrameLayout) findViewById(R.id.image_source_frame);
@@ -123,8 +124,8 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            //newView.setGate(Gate.logicGateFactory(resourceId));TODO THIS IS WHAT IS CRASHING THE WIRE ADD FUNCTION
-            newView.setImageResource(resourceId);
+            newView.setGate(currentDraggableGate);
+            newView.setImageResource(currentDraggableGate.getGateDrawableResID());
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
             newView.cellNumber = -1;
@@ -144,12 +145,11 @@ public boolean startDrag (View v) {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){
             if(resultCode==CircuitActivity.RESULT_OK){
-                String gateType=data.getStringExtra("gateName");
-                addNewImageToScreen(Gate.getGateImageByName(gateType));
+                currentDraggableGate=Gate.buildGate((String)data.getExtras().get("gateName"));
+                addNewImageToScreen();
             }
             if(resultCode==CircuitActivity.RESULT_CANCELED){
                 toast("Cancelled");
-                //lblQuestionText.setText("ask a question..");
             }
         }
     }
@@ -161,7 +161,6 @@ public boolean startDrag (View v) {
             if(id== R.id.button_select_gate) {
                 Intent selectGate =new Intent(CircuitActivity.this,SelectGateActivity.class);
                 startActivityForResult(selectGate, 1);
-                //addNewImageToScreen(R.drawable.or_gate);
             } else if(id==R.id.button_add_wire){
                 setAddWireMode(true);
             } else if(id==R.id.button_undo_gate){
