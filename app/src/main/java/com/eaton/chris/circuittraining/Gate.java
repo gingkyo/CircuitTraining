@@ -1,5 +1,7 @@
 package com.eaton.chris.circuittraining;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 
 class Gate {
@@ -212,12 +214,35 @@ class XnorGate extends Gate
 class Wire
 {
     private boolean isLive;
+    WireSurface wireSurface;
+    float [] wireCoords;
 
-    public Wire(boolean isLive){
+    public Wire(boolean isLive,WireSurface wireSurface){
+
         this.isLive=isLive;
+        this.wireSurface=wireSurface;
+        wireCoords=new float[4];
     }
     public boolean getStatus(){
         return isLive;
+    }
+    public void setWireCoords(float [] wireCoords){
+        this.wireCoords=wireCoords;
+    }
+    public void setIsLive(boolean isLive){
+        this.isLive=isLive;
+    }
+    public void reDrawWire(){
+        int color;
+        if(isLive){
+            color=Color.RED;
+        } else{
+            color=Color.WHITE;
+        }
+        wireSurface.setPaint(color);
+        wireSurface.isNewWire = true;
+        wireSurface.setLineCoords(wireCoords);
+        wireSurface.invalidate();
     }
 
 }

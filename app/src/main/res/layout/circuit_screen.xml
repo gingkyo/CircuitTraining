@@ -70,7 +70,7 @@
 
         >
 
-        <ImageView
+        <com.eaton.chris.circuittraining.PowerButton
             android:layout_width="@dimen/add_image_width"
             android:layout_height="@dimen/add_image_height"
             android:layout_weight="1"
@@ -79,22 +79,20 @@
             android:src="@drawable/power_off"
             android:tag="power_off"/>
 
-        <ImageView
+        <com.eaton.chris.circuittraining.PowerButton
             android:layout_width="@dimen/add_image_width"
             android:layout_height="@dimen/add_image_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:layout_below="@+id/imageView_power_1"
             android:id="@+id/imageView_power_2"
             android:src="@drawable/power_off"
             android:tag="power_off"/>
 
-        <ImageView
+        <com.eaton.chris.circuittraining.PowerButton
             android:layout_width="@dimen/add_image_width"
             android:layout_height="@dimen/add_image_height"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:layout_below="@+id/imageView_power_2"
             android:id="@+id/imageView_power_3"
             android:src="@drawable/power_off"
             android:tag="power_off"/>
@@ -103,9 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="*Wire*\nMode"
+            android:text="@string/wire_mode_label"
             android:id="@+id/textView_addWireLabel"
-            android:layout_alignBottom="@+id/circuitSwitchPanel"
             android:textStyle="bold"
             android:textColor="@color/red"
             android:gravity="center"

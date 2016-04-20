@@ -4,6 +4,7 @@
 
     <integer name="num_images">32</integer>
     <integer name="num_columns">8</integer>
+    <string name="wire_mode_label">*Wire*\nMode</string>
     <string name="and_gate">
         An AND gate will only output a signal when it has 2 connected wires, and that they are both powered.
     </string>

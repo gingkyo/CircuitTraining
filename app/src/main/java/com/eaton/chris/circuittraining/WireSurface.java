@@ -26,6 +26,9 @@ public class WireSurface extends View {
         paint.setStrokeWidth(10.0f);
         isNewWire = false;
     }
+    public void setPaint(int color){
+        paint.setColor(color);
+    }
     @Override
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
@@ -35,16 +38,22 @@ public class WireSurface extends View {
         if(isNewWire){
             Canvas canvasToSave = new Canvas(savedBitmap);
             canvasToSave.drawLine(startX, startY, endX, endY, paint);
-            setLineCoords(0,0,0,0);
+            resetLineCoords();
             isNewWire=false;
         }
         canvas.drawBitmap(savedBitmap, 0, 0, new Paint());
     }
-    public void setLineCoords(float sX,float sY,float eX,float eY){
-        startX=sX;
-        startY=sY;
-        endX=eX;
-        endY=eY;
+    private void resetLineCoords(){
+        startX=0.0f;
+        startY=100.0f;
+        endX = 100.0f;
+        endY = 1000.0f;
+    }
+    public void setLineCoords(float [] wireCoords){//float sX,float sY,float eX,float eY){
+        startX=wireCoords[0];
+        startY=wireCoords[1];
+        endX=wireCoords[2];
+        endY=wireCoords[3];
     }
 }
 

@@ -36,7 +36,7 @@ public class CircuitActivity extends Activity
     private boolean addWireMode=false;
     private TextView addWireLabel;
 
-    private ImageView powerButton_1,powerButton_2,powerButton_3;
+    private PowerButton powerButton_1,powerButton_2,powerButton_3;
     private Button addWire,selectGate,undoLast;
 
     @Override
@@ -50,15 +50,15 @@ public class CircuitActivity extends Activity
         setContentView(R.layout.circuit_screen);
 
         wireSurface= (WireSurface)findViewById(R.id.surfaceView_wireCanvas);
-        powerButton_1 =(ImageView)findViewById(R.id.imageView_power_1);
+        powerButton_1 =(PowerButton)findViewById(R.id.imageView_power_1);
         powerButton_1.setOnClickListener(this);
         powerButton_1.setOnLongClickListener(this);
 
-        powerButton_2 =(ImageView)findViewById(R.id.imageView_power_2);
+        powerButton_2 =(PowerButton)findViewById(R.id.imageView_power_2);
         powerButton_2.setOnClickListener(this);
         powerButton_2.setOnLongClickListener(this);
 
-        powerButton_3 =(ImageView)findViewById(R.id.imageView_power_3);
+        powerButton_3 =(PowerButton)findViewById(R.id.imageView_power_3);
         powerButton_3.setOnClickListener(this);
         powerButton_3.setOnLongClickListener(this);
 
@@ -166,54 +166,61 @@ public boolean startDrag (View v) {
             } else if(id==R.id.button_undo_gate){
                 toast("TODO UNDO LAST BUTTON");
             } else{
-                setPowerButton(view);
+                try{
+                    PowerButton powerButton = (PowerButton) view;
+                    powerButton.setPowerButton();
+                }catch(ClassCastException e){
+                    toast("button failed");
+                }
             }
         }
     }
     @Override
     public boolean onLongClick(View view) {
-        if(addWireMode){
-            if(startOfWire==null){
-                startOfWire=(ImageView) view;
+        if(addWireMode) {
+            if (startOfWire == null) {
+                startOfWire = (ImageView) view;
                 return true;
             }
-            if(view.equals(startOfWire)){
+            if (view.equals(startOfWire)) {
                 toast("line cannot start and end at same place");
-                setAddWireMode(false);
-                startOfWire=null;
-                return addWireMode;//break?
             }
-            if(viewIsPowerButton(view)){
+            else if(viewIsPowerButton(view)) {
                 toast("cannot end a wire at a power button");
-                setAddWireMode(false);
-                startOfWire=null;
-                return addWireMode;//break??
+            } else {
+                boolean wireIsLive = false;
+                Wire wire = new Wire(wireIsLive,wireSurface);
+                if (viewIsPowerButton(startOfWire)) {
+                    PowerButton pb = (PowerButton) startOfWire;
+                    wireIsLive = pb.isLive();
+                    pb.addConnection(wire);
+                } else {
+                    
+                }
+                ImageCell gateIcon = (ImageCell) view;
+                Gate gate = gateIcon.getGate();
+                // wireIsLive=gate.getOutput(gate.getGateType());
+
+                float startX = startOfWire.getX();
+
+                if (!viewIsPowerButton(startOfWire))
+                    startX += startOfWire.getWidth();
+
+                float startY = (startOfWire.getHeight() / 2) + startOfWire.getY();
+                float endY = (gateIcon.getHeight() / 2) + gateIcon.getY();
+                float[] wireCoords = {startX, startY, gateIcon.getX(), endY};
+                wire.setWireCoords(wireCoords);
+                gate.addConnection(wire);
+                wireSurface.setLineCoords(wireCoords);
+                wireSurface.isNewWire = true;
+                wireSurface.invalidate();
             }
-
-            boolean wireIsLive;
-            if(viewIsPowerButton(startOfWire)){
-                wireIsLive=powerButtonIsLive(startOfWire);
-            }//TODO check this logic - this should be else as the above only covers powerbuttons
-            ImageCell gateIcon=(ImageCell)view;
-            Gate gate=gateIcon.getGate();
-            wireIsLive=gate.getOutput(gate.getGateType());
-            Wire wire =new Wire(wireIsLive);
-            gate.addConnection(wire);
-            float startX=startOfWire.getX();
-            if(!viewIsPowerButton(startOfWire))
-                startX+=startOfWire.getWidth();
-            float startY=(startOfWire.getHeight()/2)+startOfWire.getY();
-            float endY=(gateIcon.getHeight()/2)+gateIcon.getY();
-
-            wireSurface.setLineCoords(startX,startY,gateIcon.getX(),endY);
-            wireSurface.isNewWire=true;
-            wireSurface.invalidate();
-            startOfWire=null;
-            setAddWireMode(false);
         }
-
+        startOfWire=null;
+        setAddWireMode(false);
         return false;
     }
+
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();
