@@ -7,9 +7,28 @@ class Gate {
     private Wire conn2;
     //private boolean output;
     private String gateType;
+    public static int getGateDescByName(String gateName){
+        switch (gateName) {
+            case "andGate":
+                return R.string.andGate;
+            case "nandGate":
+                return R.string.nandGate;
+            case "norGate":
+                return R.string.norGate;
+            case "notGate":
+                return R.string.notGate;
+            case "orGate":
+                return R.string.orGate;
+            case "xnorGate":
+                return R.string.xnorGate;
+            case "xorGate":
+                return R.string.xorGate;
+        }
+        return 0;
+    }
 
-    public int getGateImageByName() {
-        switch (gateType) {
+    public static int getGateImageByName(String gateName) {
+        switch (gateName) {
             case "andGate":
                 return R.drawable.and_gate;
             case "nandGate":

@@ -140,6 +140,19 @@ public boolean startDrag (View v) {
     public void toast(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1){
+            if(resultCode==CircuitActivity.RESULT_OK){
+                String gateType=data.getStringExtra("gateName");
+                addNewImageToScreen(Gate.getGateImageByName(gateType));
+            }
+            if(resultCode==CircuitActivity.RESULT_CANCELED){
+                toast("Cancelled");
+                //lblQuestionText.setText("ask a question..");
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {
@@ -147,7 +160,7 @@ public boolean startDrag (View v) {
             int id= (view.getId());
             if(id== R.id.button_select_gate) {
                 Intent selectGate =new Intent(CircuitActivity.this,SelectGateActivity.class);
-                startActivity(selectGate);
+                startActivityForResult(selectGate, 1);
                 //addNewImageToScreen(R.drawable.or_gate);
             } else if(id==R.id.button_add_wire){
                 setAddWireMode(true);

@@ -4,4 +4,26 @@
 
     <integer name="num_images">32</integer>
     <integer name="num_columns">8</integer>
+    <string name="andGate">
+        An AND gate will only output a signal when it has 2 connected wires, and that they are both powered.
+    </string>
+    <string name="nandGate">
+        A NAND gate will output a signal in a number of ways; it will output if it has 2 connections and either connection is powered -HOWEVER it will not power if BOTH gates are ON or BOTH gates are OFF.
+    </string>
+    <string name="norGate">
+        A NOR gate requires 2 connections. It will output if both gates are powered OR both gates are not powered. It won\'t output if only 1 connection is powered.
+    </string>
+    <string name="notGate">
+        A NOT gate requires a single connection. It will only output if this connection is switched off, and will not output if the connection is switched on.
+    </string>
+    <string name="orGate">
+        An OR gate takes 2 connections. It will output if either connection is powered. It will also power if both connections are powered.
+    </string>
+    <string name="xnorGate">
+        An XNOR gate takes 2 connections. It won\'t output if either connection is powered or both are powered. It will only output if neither is powered.
+    </string>
+    <string name="xorGate">
+        An XOR gate takes 2 connections. It will output if either connection has power BUT will not power if both have power.
+    </string>
+
 </resources>
