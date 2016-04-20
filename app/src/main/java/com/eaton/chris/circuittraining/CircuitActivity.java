@@ -188,18 +188,19 @@ public boolean startDrag (View v) {
             else if(viewIsPowerButton(view)) {
                 toast("cannot end a wire at a power button");
             } else {
-                boolean wireIsLive = false;
-                Wire wire = new Wire(wireIsLive,wireSurface);
+                Wire wire = new Wire(wireSurface);
                 if (viewIsPowerButton(startOfWire)) {
                     PowerButton pb = (PowerButton) startOfWire;
-                    wireIsLive = pb.isLive();
-                    pb.addConnection(wire);
+                    wire.setIsLive(pb.getOutput());
+                    pb.setOutput(wire);
                 } else {
-                    
-                }
-                ImageCell gateIcon = (ImageCell) view;
-                Gate gate = gateIcon.getGate();
-                // wireIsLive=gate.getOutput(gate.getGateType());
+                    ImageCell startCell=(ImageCell) startOfWire;
+                    CircuitComponent startGate=startCell.getGate();
+                    startGate.setOutput(wire);
+                    wire.setIsLive(startGate.getOutput());
+                    }
+                ImageCell endOfWire = (ImageCell) view;
+                CircuitComponent gate = endOfWire.getGate();
 
                 float startX = startOfWire.getX();
 
@@ -207,13 +208,14 @@ public boolean startDrag (View v) {
                     startX += startOfWire.getWidth();
 
                 float startY = (startOfWire.getHeight() / 2) + startOfWire.getY();
-                float endY = (gateIcon.getHeight() / 2) + gateIcon.getY();
-                float[] wireCoords = {startX, startY, gateIcon.getX(), endY};
+                float endY = (endOfWire.getHeight() / 2) + endOfWire.getY();
+                float[] wireCoords = {startX, startY, endOfWire.getX(), endY};
                 wire.setWireCoords(wireCoords);
-                gate.addConnection(wire);
-                wireSurface.setLineCoords(wireCoords);
-                wireSurface.isNewWire = true;
-                wireSurface.invalidate();
+                if(!gate.addInput(wire)){
+                    toast("unable to add wire to gate");
+                } else {
+                    wire.drawWire();
+                }
             }
         }
         startOfWire=null;

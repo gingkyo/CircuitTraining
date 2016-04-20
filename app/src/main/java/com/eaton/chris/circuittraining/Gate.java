@@ -1,13 +1,14 @@
 package com.eaton.chris.circuittraining;
 
 import android.graphics.Color;
+import android.view.View;
 
 import java.util.ArrayList;
 
-class Gate {
+class Gate implements CircuitComponent{
     protected Wire conn1;
     protected Wire conn2;
-    //private boolean output;
+    protected Wire outputWire;
     protected String gateType;
     protected int gateInfoResID;
     protected int gateDrawableResID;
@@ -83,7 +84,6 @@ class Gate {
         return gates;
     }
     public Gate(boolean output,String gateType){
-        //this.output=output;
         this.gateType=gateType;
     }
     public Gate(String gateType){
@@ -91,7 +91,7 @@ class Gate {
        // output=false;
         this.gateType=gateType;
     }
-    public boolean getOutput(String gateType){
+    public boolean getOutput(){
         if(isConnected()){
             switch(gateType){
                 case "notGate":
@@ -101,18 +101,18 @@ class Gate {
                 case "orGate":
                     return conn1.getStatus() |conn2.getStatus();
                 case "xorGate":
-                    if(getOutput("andGate")){
+                    if(conn1.getStatus() && conn2.getStatus()){
                         return false;
                     }else{
-                        getOutput("orGate");
+                    return conn1.getStatus() | conn2.getStatus();
                     }
                 case "nandGate":
-                    return !getOutput("andGate");
+                    return !conn1.getStatus() && !conn2.getStatus();
                 case "norGate":
-                    return !getOutput("orGate");
+                    return !conn1.getStatus() | !conn2.getStatus();
                 case "xnorGate":
                     boolean dbleNegative=!conn1.getStatus() && !conn2.getStatus();
-                    return getOutput("andGate") | dbleNegative;
+                    return conn1.getStatus() && conn2.getStatus() | dbleNegative;
             }
         }
         return false;
@@ -124,19 +124,21 @@ class Gate {
         }
         return conn1!=null;
     }
-    public boolean addConnection(Wire newConn){
+    public void setOutput(Wire wire){
+        outputWire=wire;
+    }
+    public boolean addInput(Wire newConn){
         if(isConnected()){
             return false;
         }
-       // if(conn1==null){
+        if(conn1==null){
             conn1=newConn;
             if(gateType.equals("notGate")){
-                return true;
             }
-       // }
-//        else{
-//            conn2=newConn;
-//        }
+        }
+        else{
+            conn2=newConn;
+        }
         return true;
     }
     public String getGateType(){
@@ -150,7 +152,7 @@ class Gate {
         return gateDrawableResID;
     }
 }
-class AndGate extends Gate
+class AndGate extends Gate implements CircuitComponent
 {
     public AndGate(){
         super("andGate");
@@ -158,7 +160,7 @@ class AndGate extends Gate
         gateDrawableResID=R.drawable.and_gate;
     }
 }
-class OrGate extends Gate
+class OrGate extends Gate implements CircuitComponent
 {
     public OrGate(){
 
@@ -167,7 +169,7 @@ class OrGate extends Gate
         gateDrawableResID=R.drawable.or_gate;
     }
 }
-class XorGate extends Gate
+class XorGate extends Gate implements CircuitComponent
 {
     public XorGate(){
 
@@ -176,7 +178,7 @@ class XorGate extends Gate
         gateDrawableResID=R.drawable.xor_gate;
     }
 }
-class NandGate extends Gate
+class NandGate extends Gate implements CircuitComponent
 {
     public NandGate(){
 
@@ -185,7 +187,7 @@ class NandGate extends Gate
         gateDrawableResID=R.drawable.nand_gate;
     }
 }
-class NorGate extends Gate
+class NorGate extends Gate implements CircuitComponent
 {
     public NorGate(){
 
@@ -194,7 +196,7 @@ class NorGate extends Gate
         gateDrawableResID=R.drawable.nor_gate;
     }
 }
-class NotGate extends Gate
+class NotGate extends Gate implements CircuitComponent
 {
     public NotGate(){
         super("notGate");
@@ -202,7 +204,7 @@ class NotGate extends Gate
         gateDrawableResID=R.drawable.not_gate;
     }
 }
-class XnorGate extends Gate
+class XnorGate extends Gate implements CircuitComponent
 {
     public XnorGate(){
 
@@ -211,38 +213,4 @@ class XnorGate extends Gate
         gateDrawableResID=R.drawable.xnor_gate;
     }
 }
-class Wire
-{
-    private boolean isLive;
-    WireSurface wireSurface;
-    float [] wireCoords;
 
-    public Wire(boolean isLive,WireSurface wireSurface){
-
-        this.isLive=isLive;
-        this.wireSurface=wireSurface;
-        wireCoords=new float[4];
-    }
-    public boolean getStatus(){
-        return isLive;
-    }
-    public void setWireCoords(float [] wireCoords){
-        this.wireCoords=wireCoords;
-    }
-    public void setIsLive(boolean isLive){
-        this.isLive=isLive;
-    }
-    public void reDrawWire(){
-        int color;
-        if(isLive){
-            color=Color.RED;
-        } else{
-            color=Color.WHITE;
-        }
-        wireSurface.setPaint(color);
-        wireSurface.isNewWire = true;
-        wireSurface.setLineCoords(wireCoords);
-        wireSurface.invalidate();
-    }
-
-}

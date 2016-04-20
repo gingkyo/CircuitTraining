@@ -10,5 +10,5 @@ public interface DropTarget {
 
     boolean onDragExit (DragSource source);
 
-    void setGate(Gate gate);
+    void setGate(CircuitComponent gate);
 }

@@ -13,7 +13,7 @@ public class ImageCell extends ImageView
 {
     public boolean isEmpty = true;
     public int cellNumber = -1;
-    private Gate cellValue;
+    private CircuitComponent cellValue;
 
 
     public ImageCell (Context context) {
@@ -59,10 +59,10 @@ public class ImageCell extends ImageView
         setBackgroundResource (bg);
         return true;
     }
-    public void setGate(Gate gate){
+    public void setGate(CircuitComponent gate){
         cellValue=gate;
     }
-    public Gate getGate()
+    public CircuitComponent getGate()
     {
         return cellValue;
     }

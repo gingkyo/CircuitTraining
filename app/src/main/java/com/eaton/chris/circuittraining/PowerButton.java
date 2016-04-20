@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 
-public class PowerButton extends ImageView {
+public class PowerButton extends ImageView implements CircuitComponent{
     private Wire wire;
     private boolean isLive;
     private static final int power_on = R.drawable.power_on;
@@ -29,12 +29,12 @@ public class PowerButton extends ImageView {
         if(wire!=null){
            if(wire.getStatus()!=isLive){
                wire.setIsLive(isLive);
-               wire.reDrawWire();
+               wire.drawWire();
            }
         }
     }
 
-    public boolean isLive() {
+    public boolean getOutput() {
         return isLive;
     }
 
@@ -46,7 +46,10 @@ public class PowerButton extends ImageView {
         return wire;
     }
 
-    public void addConnection(Wire wire) {
+    public void setOutput(Wire wire) {
         this.wire = wire;
+    }
+    public boolean addInput(Wire newConn){
+        return false;
     }
 }
