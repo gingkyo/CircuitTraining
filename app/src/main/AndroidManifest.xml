@@ -18,12 +18,12 @@
         </activity>
         <activity
             android:name=".SelectGateActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar">
 
         </activity>
         <activity android:name=".InfoActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>

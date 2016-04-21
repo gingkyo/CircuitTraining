@@ -3,22 +3,15 @@ package com.eaton.chris.circuittraining;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,17 +95,6 @@ public boolean startDrag (View v) {
     v.startDrag(dragData, shadowView, ds, 0);
     return true;
 }
-    public void setPowerButton(View view){
-        ImageView powerButton=(ImageView)findViewById(view.getId());
-        if(powerButtonIsLive(view)){
-            powerButton.setImageResource(R.drawable.power_off);
-            powerButton.setTag("power_off");
-        } else{
-            powerButton.setImageResource(R.drawable.power_on);
-            powerButton.setTag("power_on");
-        }
-
-    }
     public void addNewImageToScreen() {
         if (lastNewCell != null) lastNewCell.setVisibility(View.GONE);
 
@@ -124,7 +106,7 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            newView.setGate(currentDraggableGate);
+            newView.setGate(currentDraggableGate);//TODO THIS VALUE NEEDS CHANGING TO STRING REWORK GATE CONSTRUCTOR 
             newView.setImageResource(currentDraggableGate.getGateDrawableResID());
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
@@ -168,7 +150,7 @@ public boolean startDrag (View v) {
             } else{
                 try{
                     PowerButton powerButton = (PowerButton) view;
-                    powerButton.setPowerButton();
+                    powerButton.updateSignal();
                 }catch(ClassCastException e){
                     toast("button failed");
                 }
@@ -179,38 +161,43 @@ public boolean startDrag (View v) {
     public boolean onLongClick(View view) {
         if(addWireMode) {
             if (startOfWire == null) {
-                startOfWire =  view;
+                startOfWire = view;
                 return true;
             }
             if (view.equals(startOfWire)) {
                 toast("line cannot start and end at same place");
+                setAddWireMode(false);
+                return false;
             }
-            else if(viewIsPowerButton(view)) {
+            if (viewIsPowerButton(view)) {
                 toast("cannot end a wire at a power button");
-            } else {
-                //Wire wire = new Wire(wireSurface);
-                CircuitComponent startPoint;
-                if (viewIsPowerButton(startOfWire)) {
-                    startPoint = (CircuitComponent) startOfWire;
-                } else {
-                    ImageCell startCell=(ImageCell) startOfWire;
-                    startPoint=startCell.getGate();
-                    }
-                ImageCell endOfWire = (ImageCell) view;
-                CircuitComponent endPoint = endOfWire.getGate();
-                Wire wire = new Wire(wireSurface,startPoint,endPoint);
-                startPoint.setOutput(wire);
-                wire.setIsLive(startPoint.getOutput());
-                wire.buildWireCoords(startOfWire,endOfWire,
-                        viewIsPowerButton(startOfWire));
-                if(!endPoint.addInput(wire)){
-                    toast("unable to add wire to gate");
-                } else {
-                    wire.drawWire();
-                }
+                setAddWireMode(false);
+                return false;
             }
+            CircuitComponent startPoint;
+            if (viewIsPowerButton(startOfWire)) {
+                startPoint = (CircuitComponent) startOfWire;
+            } else {
+                ImageCell startCell = (ImageCell) startOfWire;
+                startPoint = startCell.getGate();
+            }
+            ImageCell endOfWire = (ImageCell) view;
+            CircuitComponent endPoint = endOfWire.getGate();
+            Wire wire = new Wire(wireSurface, startPoint, endPoint);
+            if (!startPoint.setOutput(wire)) {
+                toast("Cannot add second output");
+                setAddWireMode(false);
+                return false;
+            }
+            if (!endPoint.addInput(wire)) {
+                toast("No input slots left");
+                setAddWireMode(false);
+                return false;
+            }
+            wire.buildWireCoords(startOfWire, endOfWire,
+                    viewIsPowerButton(startOfWire));
+            wire.setIsLive(startPoint.isLive());
         }
-        startOfWire=null;
         setAddWireMode(false);
         return false;
     }
@@ -267,17 +254,13 @@ public boolean startDrag (View v) {
                         target.onDrop(dragSource);
                     }
                 }
+                toast("drop");
                 return isDropTarget;
 
             case DragEvent.ACTION_DRAG_ENDED:
-
                 break;
         }
         return false;
-    }
-    public boolean powerButtonIsLive(View view){
-        String buttonTag=view.getTag().toString();
-        return buttonTag.equals("power_on");
     }
     public boolean viewIsPowerButton(View view){
         return view.equals(powerButton_1)|view.equals(powerButton_2)
@@ -291,6 +274,5 @@ public boolean startDrag (View v) {
         } else {
             addWireLabel.setVisibility(View.INVISIBLE);
         }
-
     }
 }

@@ -1,28 +1,28 @@
 package com.eaton.chris.circuittraining;
 
+
 import android.graphics.Color;
 import android.view.View;
 
 public class Wire
 {
-    private boolean isLive;
-    WireSurface wireSurface;
     CircuitComponent startPoint;
     CircuitComponent endPoint;
     float [] wireCoords;
+    boolean isLive;
+    WireSurface wireSurface;
 
     public Wire(WireSurface wireSurface,CircuitComponent startPoint,CircuitComponent endPoint){
         this.wireSurface=wireSurface;
-        wireCoords=new float[4];
         this.startPoint=startPoint;
         this.endPoint=endPoint;
-    }
-    public boolean getStatus(){
-        return isLive;
+        isLive=false;
     }
     public void setIsLive(boolean isLive){
         this.isLive=isLive;
-        endPoint.getOutput();
+        drawWire();
+        endPoint.updateSignal();
+
     }
     public int setLiveColor(){
         if(isLive)
@@ -35,7 +35,10 @@ public class Wire
         wireSurface.setLineCoords(wireCoords);
         wireSurface.invalidate();
     }
-    public void buildWireCoords(View start,View end,boolean startsAtPowerButton) {
+    public boolean isLive() {
+        return isLive;
+    }
+    public void buildWireCoords(View start, View end, boolean startsAtPowerButton) {
         float startX = start.getX();
         if (!startsAtPowerButton)
             startX += start.getWidth();
@@ -44,5 +47,4 @@ public class Wire
         float[] wireCoords = {startX, startY, end.getX(), endY};
         this.wireCoords=wireCoords;
     }
-
 }

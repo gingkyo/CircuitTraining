@@ -1,16 +1,98 @@
 package com.eaton.chris.circuittraining;
 
-
 import java.util.ArrayList;
 
-abstract class Gate implements CircuitComponent{
-    protected Wire conn1;
-    protected Wire conn2;
-    protected Wire outputWire;
-    protected String gateType;
+public class Gate implements CircuitComponent{
+
+    private String gateType;
+    private Wire conn1;
+    private Wire conn2;
+    private Wire output;
+    private boolean isLive;
     protected int gateInfoResID;
     protected int gateDrawableResID;
 
+    public Gate(String gateType,int gateInfoResID,int gateDrawableResID){
+        this.gateType=gateType;
+        this.gateInfoResID=gateInfoResID;
+        this.gateDrawableResID=gateDrawableResID;
+        conn1=null;
+        conn2=null;
+        output=null;
+        isLive=false;
+    }
+
+    public boolean setOutput(Wire wire){
+        if(output!=null)
+            return false;
+        output=wire;
+        return true;
+    }
+    public void setIsLive(boolean isLive){
+        this.isLive=isLive;
+    }
+    public boolean isLive() {
+        return isLive;
+    }
+    public boolean addInput(Wire wire){
+        if(isConnected()){
+            return false;
+        }
+        if(conn1==null){
+            conn1=wire;
+            if(gateType.equals("notGate")){
+            }
+        }
+        else{
+            conn2=wire;
+        }
+        return true;
+    }
+    public boolean isConnected(){
+        if(!gateType.equals("notGate"))
+        {
+            return conn1!=null && conn2!=null;
+        }
+        return conn1!=null;
+    }
+    public void updateSignal() {
+        if (isConnected()) {
+            switch (gateType) {
+                case "notGate":
+                    isLive = !conn1.isLive();
+                case "andGate":
+                    isLive = conn1.isLive() && conn2.isLive();
+                case "orGate":
+                    isLive = conn2.isLive() || conn1.isLive();
+                case "xorGate":
+                    if (conn1.isLive() && conn2.isLive()) {
+                        isLive = false;
+                    } else {
+                        isLive = conn1.isLive() || conn2.isLive();
+                    }
+                case "nandGate":
+                    isLive = !conn1.isLive() && !conn2.isLive();
+                case "norGate":
+                    isLive = !conn1.isLive() || !conn2.isLive();
+                case "xnorGate":
+                    boolean dbleNegative = !conn1.isLive() && !conn2.isLive();
+                    isLive = conn1.isLive() && conn2.isLive() || dbleNegative;
+            }
+            if(output!=null){
+                output.setIsLive(isLive());
+            }
+        }
+    }
+    public String getGateType(){
+
+        return gateType;
+    }
+    public int getGateInfoResID(){
+        return gateInfoResID;
+    }
+    public int getGateDrawableResID(){
+        return gateDrawableResID;
+    }
     public static int getGateDescByName(String gateName){
         switch (gateName) {
             case "andGate":
@@ -53,161 +135,33 @@ abstract class Gate implements CircuitComponent{
     public static Gate buildGate(String gateType){
         switch(gateType){
             case "andGate":
-                return new AndGate();
+                return new Gate("andGate",R.string.and_gate,R.drawable.and_gate);
             case "nandGate":
-                return new NandGate();
+                return new Gate("nandGate",R.string.nand_gate,R.drawable.nand_gate);
             case "norGate":
-                return new NorGate();
+                return new Gate("norGate",R.string.nor_gate,R.drawable.nor_gate);
             case "notGate":
-                return new NotGate();
+                return new Gate("notGate",R.string.not_gate,R.drawable.not_gate);
             case "orGate":
-                return new OrGate();
+                return new Gate("orGate",R.string.or_gate,R.drawable.or_gate);
             case "xnorGate":
-                return new XnorGate();
+                return new Gate("xnorGate",R.string.xnor_gate,R.drawable.xnor_gate);
             case "xorGate":
-                return new XorGate();
+                return new Gate("xorGate",R.string.xor_gate,R.drawable.xor_gate);
         }
         return null;
     }
     public static ArrayList<Gate> buildFullGateList() {
         ArrayList<Gate>gates=new ArrayList<>();
-        gates.add(new AndGate());
-        gates.add(new NandGate());
-        gates.add(new NorGate());
-        gates.add(new NotGate());
-        gates.add(new OrGate());
-        gates.add(new XnorGate());
-        gates.add(new XorGate());
+        gates.add(new Gate("andGate",R.string.and_gate,R.drawable.and_gate));
+        gates.add(new Gate("nandGate",R.string.nand_gate,R.drawable.nand_gate));
+        gates.add(new Gate("norGate",R.string.nor_gate,R.drawable.nor_gate));
+        gates.add(new Gate("notGate",R.string.not_gate,R.drawable.not_gate));
+        gates.add(new Gate("orGate",R.string.or_gate,R.drawable.or_gate));
+        gates.add(new Gate("xnorGate",R.string.xnor_gate,R.drawable.xnor_gate));
+        gates.add(new Gate("xorGate",R.string.xor_gate,R.drawable.xor_gate));
 
         return gates;
-    }
-    public Gate(boolean output,String gateType){
-        this.gateType=gateType;
-    }
-    public Gate(String gateType){
-
-        this.gateType=gateType;
-    }
-    public boolean getOutput(){
-        if(isConnected()){
-            switch(gateType){
-                case "notGate":
-                    return !conn1.getStatus();
-                case "andGate":
-                    return conn1.getStatus() && conn2.getStatus();
-                case "orGate":
-                    return conn1.getStatus() |conn2.getStatus();
-                case "xorGate":
-                    if(conn1.getStatus() && conn2.getStatus()){
-                        return false;
-                    }else{
-                    return conn1.getStatus() | conn2.getStatus();
-                    }
-                case "nandGate":
-                    return !conn1.getStatus() && !conn2.getStatus();
-                case "norGate":
-                    return !conn1.getStatus() | !conn2.getStatus();
-                case "xnorGate":
-                    boolean dbleNegative=!conn1.getStatus() && !conn2.getStatus();
-                    return conn1.getStatus() && conn2.getStatus() | dbleNegative;
-            }
-        }
-        return false;
-    }
-    public boolean isConnected(){
-        if(!gateType.equals("notGate"))
-        {
-            return conn1!=null && conn2!=null;
-        }
-        return conn1!=null;
-    }
-    public void setOutput(Wire wire){
-        outputWire=wire;
-    }
-    public boolean addInput(Wire newConn){
-        if(isConnected()){
-            return false;
-        }
-        if(conn1==null){
-            conn1=newConn;
-            if(gateType.equals("notGate")){
-            }
-        }
-        else{
-            conn2=newConn;
-        }
-        return true;
-    }
-    public String getGateType(){
-
-        return gateType;
-    }
-    public int getGateInfoResID(){
-        return gateInfoResID;
-    }
-    public int getGateDrawableResID(){
-        return gateDrawableResID;
-    }
-}
-class AndGate extends Gate
-{
-    public AndGate(){
-        super("andGate");
-        gateInfoResID=R.string.and_gate;
-        gateDrawableResID=R.drawable.and_gate;
-    }
-}
-class OrGate extends Gate
-{
-    public OrGate(){
-
-        super("orGate");
-        gateInfoResID=R.string.or_gate;
-        gateDrawableResID=R.drawable.or_gate;
-    }
-}
-class XorGate extends Gate
-{
-    public XorGate(){
-
-        super("xorGate");
-        gateInfoResID=R.string.xor_gate;
-        gateDrawableResID=R.drawable.xor_gate;
-    }
-}
-class NandGate extends Gate
-{
-    public NandGate(){
-
-        super(true,"nandGate");
-        gateInfoResID=R.string.nand_gate;
-        gateDrawableResID=R.drawable.nand_gate;
-    }
-}
-class NorGate extends Gate
-{
-    public NorGate(){
-
-        super(true,"norGate");
-        gateInfoResID=R.string.nor_gate;
-        gateDrawableResID=R.drawable.nor_gate;
-    }
-}
-class NotGate extends Gate
-{
-    public NotGate(){
-        super("notGate");
-        gateInfoResID=R.string.not_gate;
-        gateDrawableResID=R.drawable.not_gate;
-    }
-}
-class XnorGate extends Gate
-{
-    public XnorGate(){
-
-        super(true,"xnorGate");
-        gateInfoResID=R.string.xnor_gate;
-        gateDrawableResID=R.drawable.xnor_gate;
     }
 }
 

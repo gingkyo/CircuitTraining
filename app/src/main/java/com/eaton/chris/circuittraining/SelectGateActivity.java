@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import java.util.List;
 public class SelectGateActivity extends Activity implements View.OnClickListener  {
     ArrayList<Gate> gateList;
     private GateListAdapter adapter;
-    ListView listView;
+    GridView listView;
 
     AdapterView.OnItemClickListener selectGateItemHandler= new AdapterView.OnItemClickListener() {
         @Override
@@ -38,7 +39,7 @@ public class SelectGateActivity extends Activity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_gate);
-        listView=(ListView)findViewById(R.id.selectGate_listView);
+        listView=(GridView)findViewById(R.id.selectGate_listView);
         gateList=Gate.buildFullGateList();
         adapter=new GateListAdapter(this,R.layout.activity_select_gate,gateList);
         listView.setAdapter(adapter);
