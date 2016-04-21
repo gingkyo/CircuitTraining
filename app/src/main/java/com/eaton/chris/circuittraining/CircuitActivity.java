@@ -32,7 +32,7 @@ public class CircuitActivity extends Activity
     private DragSource dragSource;
     private Gate currentDraggableGate=null;
     private ImageCell lastNewCell=null;
-    private ImageView startOfWire=null;
+    private View startOfWire=null;
     private boolean addWireMode=false;
     private TextView addWireLabel;
 
@@ -50,7 +50,7 @@ public class CircuitActivity extends Activity
         setContentView(R.layout.circuit_screen);
 
         wireSurface= (WireSurface)findViewById(R.id.surfaceView_wireCanvas);
-        powerButton_1 =(PowerButton)findViewById(R.id.imageView_power_1);
+        powerButton_1 =(PowerButton) findViewById(R.id.imageView_power_1);
         powerButton_1.setOnClickListener(this);
         powerButton_1.setOnLongClickListener(this);
 
@@ -179,7 +179,7 @@ public boolean startDrag (View v) {
     public boolean onLongClick(View view) {
         if(addWireMode) {
             if (startOfWire == null) {
-                startOfWire = (ImageView) view;
+                startOfWire =  view;
                 return true;
             }
             if (view.equals(startOfWire)) {
@@ -188,30 +188,22 @@ public boolean startDrag (View v) {
             else if(viewIsPowerButton(view)) {
                 toast("cannot end a wire at a power button");
             } else {
-                Wire wire = new Wire(wireSurface);
+                //Wire wire = new Wire(wireSurface);
+                CircuitComponent startPoint;
                 if (viewIsPowerButton(startOfWire)) {
-                    PowerButton pb = (PowerButton) startOfWire;
-                    wire.setIsLive(pb.getOutput());
-                    pb.setOutput(wire);
+                    startPoint = (CircuitComponent) startOfWire;
                 } else {
                     ImageCell startCell=(ImageCell) startOfWire;
-                    CircuitComponent startGate=startCell.getGate();
-                    startGate.setOutput(wire);
-                    wire.setIsLive(startGate.getOutput());
+                    startPoint=startCell.getGate();
                     }
                 ImageCell endOfWire = (ImageCell) view;
-                CircuitComponent gate = endOfWire.getGate();
-
-                float startX = startOfWire.getX();
-
-                if (!viewIsPowerButton(startOfWire))
-                    startX += startOfWire.getWidth();
-
-                float startY = (startOfWire.getHeight() / 2) + startOfWire.getY();
-                float endY = (endOfWire.getHeight() / 2) + endOfWire.getY();
-                float[] wireCoords = {startX, startY, endOfWire.getX(), endY};
-                wire.setWireCoords(wireCoords);
-                if(!gate.addInput(wire)){
+                CircuitComponent endPoint = endOfWire.getGate();
+                Wire wire = new Wire(wireSurface,startPoint,endPoint);
+                startPoint.setOutput(wire);
+                wire.setIsLive(startPoint.getOutput());
+                wire.buildWireCoords(startOfWire,endOfWire,
+                        viewIsPowerButton(startOfWire));
+                if(!endPoint.addInput(wire)){
                     toast("unable to add wire to gate");
                 } else {
                     wire.drawWire();

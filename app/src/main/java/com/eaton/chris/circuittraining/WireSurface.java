@@ -45,11 +45,11 @@ public class WireSurface extends View {
     }
     private void resetLineCoords(){
         startX=0.0f;
-        startY=100.0f;
-        endX = 100.0f;
-        endY = 1000.0f;
+        startY=0.0f;
+        endX = 0.0f;
+        endY = 0.0f;
     }
-    public void setLineCoords(float [] wireCoords){//float sX,float sY,float eX,float eY){
+    public void setLineCoords(float [] wireCoords){
         startX=wireCoords[0];
         startY=wireCoords[1];
         endX=wireCoords[2];

@@ -33,17 +33,8 @@ public class PowerButton extends ImageView implements CircuitComponent{
            }
         }
     }
-
     public boolean getOutput() {
         return isLive;
-    }
-
-    public void setLive(boolean live) {
-        isLive = live;
-    }
-
-    public Wire getWire() {
-        return wire;
     }
 
     public void setOutput(Wire wire) {

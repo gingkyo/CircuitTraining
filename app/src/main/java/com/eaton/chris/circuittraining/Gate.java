@@ -1,11 +1,9 @@
 package com.eaton.chris.circuittraining;
 
-import android.graphics.Color;
-import android.view.View;
 
 import java.util.ArrayList;
 
-class Gate implements CircuitComponent{
+abstract class Gate implements CircuitComponent{
     protected Wire conn1;
     protected Wire conn2;
     protected Wire outputWire;
@@ -88,7 +86,6 @@ class Gate implements CircuitComponent{
     }
     public Gate(String gateType){
 
-       // output=false;
         this.gateType=gateType;
     }
     public boolean getOutput(){
@@ -152,7 +149,7 @@ class Gate implements CircuitComponent{
         return gateDrawableResID;
     }
 }
-class AndGate extends Gate implements CircuitComponent
+class AndGate extends Gate
 {
     public AndGate(){
         super("andGate");
@@ -160,7 +157,7 @@ class AndGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.and_gate;
     }
 }
-class OrGate extends Gate implements CircuitComponent
+class OrGate extends Gate
 {
     public OrGate(){
 
@@ -169,7 +166,7 @@ class OrGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.or_gate;
     }
 }
-class XorGate extends Gate implements CircuitComponent
+class XorGate extends Gate
 {
     public XorGate(){
 
@@ -178,7 +175,7 @@ class XorGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.xor_gate;
     }
 }
-class NandGate extends Gate implements CircuitComponent
+class NandGate extends Gate
 {
     public NandGate(){
 
@@ -187,7 +184,7 @@ class NandGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.nand_gate;
     }
 }
-class NorGate extends Gate implements CircuitComponent
+class NorGate extends Gate
 {
     public NorGate(){
 
@@ -196,7 +193,7 @@ class NorGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.nor_gate;
     }
 }
-class NotGate extends Gate implements CircuitComponent
+class NotGate extends Gate
 {
     public NotGate(){
         super("notGate");
@@ -204,7 +201,7 @@ class NotGate extends Gate implements CircuitComponent
         gateDrawableResID=R.drawable.not_gate;
     }
 }
-class XnorGate extends Gate implements CircuitComponent
+class XnorGate extends Gate
 {
     public XnorGate(){
 

@@ -11,18 +11,18 @@ public class Wire
     CircuitComponent endPoint;
     float [] wireCoords;
 
-    public Wire(WireSurface wireSurface){
+    public Wire(WireSurface wireSurface,CircuitComponent startPoint,CircuitComponent endPoint){
         this.wireSurface=wireSurface;
         wireCoords=new float[4];
+        this.startPoint=startPoint;
+        this.endPoint=endPoint;
     }
     public boolean getStatus(){
         return isLive;
     }
-    public void setWireCoords(float [] wireCoords){
-        this.wireCoords=wireCoords;
-    }
     public void setIsLive(boolean isLive){
         this.isLive=isLive;
+        endPoint.getOutput();
     }
     public int setLiveColor(){
         if(isLive)
@@ -34,6 +34,15 @@ public class Wire
         wireSurface.isNewWire = true;
         wireSurface.setLineCoords(wireCoords);
         wireSurface.invalidate();
+    }
+    public void buildWireCoords(View start,View end,boolean startsAtPowerButton) {
+        float startX = start.getX();
+        if (!startsAtPowerButton)
+            startX += start.getWidth();
+        float startY = (start.getHeight() / 2) + start.getY();
+        float endY = (end.getHeight() / 2) + end.getY();
+        float[] wireCoords = {startX, startY, end.getX(), endY};
+        this.wireCoords=wireCoords;
     }
 
 }
