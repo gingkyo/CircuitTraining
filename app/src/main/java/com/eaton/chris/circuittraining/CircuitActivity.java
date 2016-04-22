@@ -106,7 +106,6 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            //newView.setGate(currentDraggableGate);//TODO THIS VALUE NEEDS CHANGING TO STRING REWORK GATE CONSTRUCTOR
             newView.setImageResource(GateUtility.getGateImageByName(currentDraggableGate));
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
@@ -197,6 +196,7 @@ public boolean startDrag (View v) {
             }
             wire.buildWireCoords(startOfWire, endOfWire,
                     viewIsPowerButton(startOfWire));
+            wireSurface.wireArray.add(wire);
             wire.setIsLive(startPoint.isLive());
         }
         setAddWireMode(false);

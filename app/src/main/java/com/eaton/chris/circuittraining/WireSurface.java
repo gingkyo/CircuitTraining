@@ -6,54 +6,73 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
-public class WireSurface extends View {
+import java.util.ArrayList;
+
+public class WireSurface extends SurfaceView implements Runnable {
+    SurfaceHolder myHolder;
+    Thread myThread;
+    boolean isRunning=true;
+    ArrayList<Wire> wireArray;
+
     Paint paint;
-    boolean isNewWire;
-    Bitmap savedBitmap;
-    float startX,startY,endX,endY;
 
     public WireSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
-        startX=0.0f;
-        startY=0.0f;
-        endX=0.0f;
-        endY=0.0f;
-        paint = new Paint();
-        paint.setColor(Color.BLUE);
-        paint.setStrokeWidth(10.0f);
-        isNewWire = false;
+        wireArray =new ArrayList<>();
+        paint=new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(5.0f);
+        myHolder = getHolder();
+        myThread = new Thread(this);
     }
-    public void setPaint(int color){
+    public void setPaint (int color){
         paint.setColor(color);
     }
+    public void start()
+    {
+        isRunning=true;
+        myThread = new Thread(this);
+        myThread.start();
+    }
+
+    public void stop()
+    {
+        isRunning=false;
+        while(true)
+        {
+            try {
+                myThread.join();
+                break;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } // block until thread dies
+            break;
+        }
+    }
+
+
     @Override
-    public void onDraw(Canvas canvas){
-        super.onDraw(canvas);
-        if (savedBitmap == null) {
-            savedBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.RGB_565);
+    public void run() {
+        while(isRunning)
+        {
+            if(!myHolder.getSurface().isValid())
+                continue;
+
+            Canvas canvas = myHolder.lockCanvas();
+            for(Wire wire:wireArray){
+                paint.setColor(wire.setLiveColor());
+                canvas.drawLine(wire.wireCoords[0], wire.wireCoords[1], wire.wireCoords[2], wire.wireCoords[3], paint);
+            }
+            myHolder.unlockCanvasAndPost(canvas);
+            stop();
         }
-        if(isNewWire){
-            Canvas canvasToSave = new Canvas(savedBitmap);
-            canvasToSave.drawLine(startX, startY, endX, endY, paint);
-            resetLineCoords();
-            isNewWire=false;
-        }
-        canvas.drawBitmap(savedBitmap, 0, 0, new Paint());
-    }
-    private void resetLineCoords(){
-        startX=0.0f;
-        startY=0.0f;
-        endX = 0.0f;
-        endY = 0.0f;
-    }
-    public void setLineCoords(float [] wireCoords){
-        startX=wireCoords[0];
-        startY=wireCoords[1];
-        endX=wireCoords[2];
-        endY=wireCoords[3];
+
+
     }
 }
 

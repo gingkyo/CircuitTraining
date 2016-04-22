@@ -1,7 +1,5 @@
 package com.eaton.chris.circuittraining;
 
-import java.util.ArrayList;
-
 public class Gate implements CircuitComponent{
 
     private String gateType;
@@ -93,12 +91,6 @@ public class Gate implements CircuitComponent{
     public String getGateType(){
 
         return gateType;
-    }
-    public int getGateInfoResID(){
-        return gateInfoResID;
-    }
-    public int getGateDrawableResID(){
-        return gateDrawableResID;
     }
 }
 
