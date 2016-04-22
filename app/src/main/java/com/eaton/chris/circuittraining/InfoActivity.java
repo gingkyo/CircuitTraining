@@ -19,9 +19,9 @@ public class InfoActivity extends Activity {
             TextView title=(TextView)findViewById(R.id.gate_info_title);
             title.setText(gateName);
             TextView gateInfoText=(TextView)findViewById(R.id.gate_info_textView);
-            gateInfoText.setText(Gate.getGateDescByName(gateName));
+            gateInfoText.setText(GateUtility.getGateDescByName(gateName));
             ImageView iv=(ImageView)findViewById(R.id.gate_info_imageView);
-            iv.setImageResource(Gate.getGateImageByName(gateName));
+            iv.setImageResource(GateUtility.getGateImageByName(gateName));
         }
     }
 }

@@ -31,8 +31,8 @@ public class Wire
     }
     public void drawWire(){
         wireSurface.setPaint(setLiveColor());
-        wireSurface.isNewWire = true;
         wireSurface.setLineCoords(wireCoords);
+        wireSurface.isNewWire = true;
         wireSurface.invalidate();
     }
     public boolean isLive() {

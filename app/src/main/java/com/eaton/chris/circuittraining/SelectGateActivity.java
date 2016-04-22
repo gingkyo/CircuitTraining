@@ -40,7 +40,7 @@ public class SelectGateActivity extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_gate);
         listView=(GridView)findViewById(R.id.selectGate_listView);
-        gateList=Gate.buildFullGateList();
+        gateList=GateUtility.buildFullGateList();
         adapter=new GateListAdapter(this,R.layout.activity_select_gate,gateList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(selectGateItemHandler);

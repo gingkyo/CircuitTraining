@@ -23,7 +23,7 @@ public class CircuitActivity extends Activity
 {
     WireSurface wireSurface;
     private DragSource dragSource;
-    private Gate currentDraggableGate=null;
+    private String currentDraggableGate;
     private ImageCell lastNewCell=null;
     private View startOfWire=null;
     private boolean addWireMode=false;
@@ -106,8 +106,8 @@ public boolean startDrag (View v) {
                     ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
 
             ImageCell newView = new ImageCell(this);
-            newView.setGate(currentDraggableGate);//TODO THIS VALUE NEEDS CHANGING TO STRING REWORK GATE CONSTRUCTOR 
-            newView.setImageResource(currentDraggableGate.getGateDrawableResID());
+            //newView.setGate(currentDraggableGate);//TODO THIS VALUE NEEDS CHANGING TO STRING REWORK GATE CONSTRUCTOR
+            newView.setImageResource(GateUtility.getGateImageByName(currentDraggableGate));
             imageHolder.addView(newView, lp);
             newView.isEmpty = false;
             newView.cellNumber = -1;
@@ -127,7 +127,7 @@ public boolean startDrag (View v) {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1){
             if(resultCode==CircuitActivity.RESULT_OK){
-                currentDraggableGate=Gate.buildGate((String)data.getExtras().get("gateName"));
+                currentDraggableGate=(String)data.getExtras().get("gateName");
                 addNewImageToScreen();
             }
             if(resultCode==CircuitActivity.RESULT_CANCELED){
@@ -145,6 +145,7 @@ public boolean startDrag (View v) {
                 startActivityForResult(selectGate, 1);
             } else if(id==R.id.button_add_wire){
                 setAddWireMode(true);
+                toast(currentDraggableGate);
             } else if(id==R.id.button_undo_gate){
                 toast("TODO UNDO LAST BUTTON");
             } else{
@@ -254,7 +255,7 @@ public boolean startDrag (View v) {
                         target.onDrop(dragSource);
                     }
                 }
-                toast("drop");
+                target.setGate(GateUtility.buildGate(currentDraggableGate));
                 return isDropTarget;
 
             case DragEvent.ACTION_DRAG_ENDED:
