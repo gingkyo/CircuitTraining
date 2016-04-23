@@ -21,22 +21,24 @@
         style="@style/fontDefaultWhite"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/gate_info_textView"
-        android:layout_below="@id/gate_info_title"
-        style="@style/fontDefaultWhite"
-        />
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/gate_info_imageView"
-        android:layout_below="@id/gate_info_title"
-        android:layout_toRightOf="@id/gate_info_textView"
-        android:layout_toEndOf="@id/gate_info_textView"
-        />
+        android:layout_below="@id/gate_info_title">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/gate_info_textView"
+            android:layout_weight="1"
+            style="@style/fontDefaultWhite"
+            />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/gate_info_imageView"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 </RelativeLayout>

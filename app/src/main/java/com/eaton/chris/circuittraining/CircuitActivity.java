@@ -3,6 +3,7 @@ package com.eaton.chris.circuittraining;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -30,7 +31,6 @@ public class CircuitActivity extends Activity
     private TextView addWireLabel;
 
     private PowerButton powerButton_1,powerButton_2,powerButton_3;
-    private Button addWire,selectGate,undoLast;
 
     @Override
     protected void onResume() {
@@ -55,13 +55,13 @@ public class CircuitActivity extends Activity
         powerButton_3.setOnClickListener(this);
         powerButton_3.setOnLongClickListener(this);
 
-        addWire=(Button)findViewById(R.id.button_add_wire);
+        Button addWire=(Button)findViewById(R.id.button_add_wire);
         addWire.setOnClickListener(this);
 
-        selectGate=(Button)findViewById(R.id.button_select_gate);
+        Button selectGate=(Button)findViewById(R.id.button_select_gate);
         selectGate.setOnClickListener(this);
 
-        undoLast=(Button)findViewById(R.id.button_undo_gate);
+        Button undoLast=(Button)findViewById(R.id.button_undo_gate);
         undoLast.setOnClickListener(this);
 
         addWireLabel=(TextView)findViewById(R.id.textView_addWireLabel);
@@ -75,26 +75,24 @@ public class CircuitActivity extends Activity
             gridView.setAdapter(new ImageCellAdapter(this));
         }
     }
+    public boolean startDrag (View v) {
 
-public boolean startDrag (View v) {
+        boolean isDragSource = false;
+        DragSource ds = null;
+        try {
+            ds = (DragSource) v;
+            isDragSource = true;
+        } catch (ClassCastException ex) {
 
-    boolean isDragSource = false;
-    DragSource ds = null;
-    try {
-        ds = (DragSource) v;
-        isDragSource = true;
-    } catch (ClassCastException ex) {
+        }
+        if (!isDragSource) return false;
+        if (!ds.allowDrag ()) return false;
+        dragSource = ds;
+        ClipData dragData = ClipData.newPlainText("","");
+        View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
+        v.startDrag(dragData, shadowView, ds, 0);
+        return true;
     }
-    if (!isDragSource) return false;
-    if (!ds.allowDrag ()) return false;
-
-    dragSource = ds;
-
-    ClipData dragData = ClipData.newPlainText("","");
-    View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
-    v.startDrag(dragData, shadowView, ds, 0);
-    return true;
-}
     public void addNewImageToScreen() {
         if (lastNewCell != null) lastNewCell.setVisibility(View.GONE);
 
@@ -116,9 +114,6 @@ public boolean startDrag (View v) {
             newView.setOnTouchListener(this);
         }
     }
-
-
-
     public void toast(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
@@ -134,7 +129,6 @@ public boolean startDrag (View v) {
             }
         }
     }
-
     @Override
     public void onClick(View view) {
         if(!addWireMode){
@@ -146,7 +140,7 @@ public boolean startDrag (View v) {
                 setAddWireMode(true);
                 toast(currentDraggableGate);
             } else if(id==R.id.button_undo_gate){
-                toast("TODO UNDO LAST BUTTON");
+                toast("TODO UNDO LAST BUTTON");//TODO
             } else{
                 try{
                     PowerButton powerButton = (PowerButton) view;
@@ -165,12 +159,12 @@ public boolean startDrag (View v) {
                 return true;
             }
             if (view.equals(startOfWire)) {
-                toast("line cannot start and end at same place");
+                toast("line cannot start and end at the same place");
                 setAddWireMode(false);
                 return false;
             }
             if (viewIsPowerButton(view)) {
-                toast("cannot end a wire at a power button");
+                toast("cannot end a wire on a power button");
                 setAddWireMode(false);
                 return false;
             }
@@ -185,7 +179,7 @@ public boolean startDrag (View v) {
             CircuitComponent endPoint = endOfWire.getGate();
             Wire wire = new Wire(wireSurface, startPoint, endPoint);
             if (!startPoint.setOutput(wire)) {
-                toast("Cannot add second output");
+                toast("Cannot add a second output wire");
                 setAddWireMode(false);
                 return false;
             }
@@ -202,7 +196,6 @@ public boolean startDrag (View v) {
         setAddWireMode(false);
         return false;
     }
-
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();

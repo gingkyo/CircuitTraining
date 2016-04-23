@@ -6,19 +6,19 @@ public abstract class GateUtility {
     public static Gate buildGate(String gateType){
         switch(gateType){
             case "andGate":
-                return new Gate("andGate",R.string.and_gate,R.drawable.and_gate);
+                return new Gate("andGate");
             case "nandGate":
-                return new Gate("nandGate",R.string.nand_gate,R.drawable.nand_gate);
+                return new Gate("nandGate");
             case "norGate":
-                return new Gate("norGate",R.string.nor_gate,R.drawable.nor_gate);
+                return new Gate("norGate");
             case "notGate":
-                return new Gate("notGate",R.string.not_gate,R.drawable.not_gate);
+                return new Gate("notGate");
             case "orGate":
-                return new Gate("orGate",R.string.or_gate,R.drawable.or_gate);
+                return new Gate("orGate");
             case "xnorGate":
-                return new Gate("xnorGate",R.string.xnor_gate,R.drawable.xnor_gate);
+                return new Gate("xnorGate");
             case "xorGate":
-                return new Gate("xorGate",R.string.xor_gate,R.drawable.xor_gate);
+                return new Gate("xorGate");
         }
         return null;
     }

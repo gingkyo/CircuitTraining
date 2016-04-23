@@ -5,26 +5,27 @@
     <integer name="num_images">32</integer>
     <integer name="num_columns">8</integer>
     <string name="wire_mode_label">*Wire*\nMode</string>
+    <string name="splash_screen_title"> Circuit\nTraining</string>
+    <string name="splash_screen_hint_text">Click to Begin</string>
     <string name="and_gate">
-        An AND gate will only output a signal when it has 2 connected wires, and that they are both powered.
+        The AND gate is so named because it acts in the same way as the logical "and" operator. The output is "true" when both inputs are "true." Otherwise, the output is "false."
     </string>
     <string name="nand_gate">
-        A NAND gate will output a signal in a number of ways; it will output if it has 2 connections and either connection is powered -HOWEVER it will not power if BOTH gates are ON or BOTH gates are OFF.
+        The NAND gate operates as an AND gate followed by a NOT gate. It acts in the manner of the logical operation "and" followed by negation. The output is "false" if both inputs are "true." Otherwise, the output is "true."
     </string>
     <string name="nor_gate">
-        A NOR gate requires 2 connections. It will output if both gates are powered OR both gates are not powered. It won\'t output if only 1 connection is powered.
+        The NOR gate is a combination OR gate followed by a NOT gate. Its output is "true" if both inputs are "false." Otherwise, the output is "false."
     </string>
     <string name="not_gate">
         A NOT gate requires a single connection. It will only output if this connection is switched off, and will not output if the connection is switched on.
     </string>
     <string name="or_gate">
-        An OR gate takes 2 connections. It will output if either connection is powered. It will also power if both connections are powered.
+        The OR gate gets its name from the fact that it behaves after the fashion of the logical inclusive "or." The output is "true" if either or both of the inputs are "true." If both inputs are "false," then the output is "false."
     </string>
     <string name="xnor_gate">
-        An XNOR gate takes 2 connections. It won\'t output if either connection is powered or both are powered. It will only output if neither is powered.
-    </string>
+        The XNOR (exclusive-NOR) gate is a combination XOR gate followed by a NOT gate. Its output is "true" if the inputs are the same, and "false" if the inputs are different.    </string>
     <string name="xor_gate">
-        An XOR gate takes 2 connections. It will output if either connection has power BUT will not power if both have power.
+        The XOR ( exclusive-OR ) gate acts in the same way as the logical "either/or." The output is "true" if either, but not both, of the inputs are "true."
     </string>
 
 </resources>

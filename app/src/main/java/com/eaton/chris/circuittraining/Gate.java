@@ -7,13 +7,9 @@ public class Gate implements CircuitComponent{
     private Wire conn2;
     private Wire output;
     private boolean isLive;
-    protected int gateInfoResID;
-    protected int gateDrawableResID;
 
-    public Gate(String gateType,int gateInfoResID,int gateDrawableResID){
+    public Gate(String gateType){
         this.gateType=gateType;
-        this.gateInfoResID=gateInfoResID;
-        this.gateDrawableResID=gateDrawableResID;
         conn1=null;
         conn2=null;
         output=null;
@@ -38,8 +34,7 @@ public class Gate implements CircuitComponent{
         }
         if(conn1==null){
             conn1=wire;
-            if(gateType.equals("notGate")){
-            }
+            if(gateType.equals("notGate")) return true;
         }
         else{
             conn2=wire;
@@ -47,11 +42,8 @@ public class Gate implements CircuitComponent{
         return true;
     }
     public boolean isConnected(){
-        if(!gateType.equals("notGate"))
-        {
-            return conn1!=null && conn2!=null;
-        }
-        return conn1!=null;
+        if(gateType.equals("notGate")) return conn1!=null;
+        return conn1!=null && conn2!=null;
     }
     public void updateSignal() {
         if (isConnected()) {
@@ -68,15 +60,19 @@ public class Gate implements CircuitComponent{
                 case "xorGate":
                     if (conn1.isLive() && conn2.isLive()) {
                         isLive = false;
-                    } else {
-                        isLive = conn1.isLive() || conn2.isLive();
+                        break;
                     }
+                    isLive = conn1.isLive() || conn2.isLive();
                     break;
                 case "nandGate":
-                    isLive = !conn1.isLive() && !conn2.isLive();
+                    if(conn1.isLive() && conn2.isLive()){
+                        isLive=false;
+                        break;
+                    }
+                    isLive=true;
                     break;
                 case "norGate":
-                    isLive = !conn1.isLive() || !conn2.isLive();
+                    isLive = !conn1.isLive() && !conn2.isLive();
                     break;
                 case "xnorGate":
                     boolean dbleNegative = !conn1.isLive() && !conn2.isLive();
@@ -89,7 +85,6 @@ public class Gate implements CircuitComponent{
         }
     }
     public String getGateType(){
-
         return gateType;
     }
 }

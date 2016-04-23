@@ -49,7 +49,7 @@ public class ImageCell extends ImageView
     }
     public boolean onDragEnter (DragSource source) {
         if (cellNumber < 0) return false;
-        int bg = isEmpty ? R.color.cell_empty_hover : R.color.cell_filled_hover;
+        int bg = isEmpty ? R.color.green : R.color.cell_filled_hover;
         setBackgroundResource (bg);
         return true;
     }
