@@ -27,5 +27,70 @@
     <string name="xor_gate">
         The XOR ( exclusive-OR ) gate acts in the same way as the logical "either/or." The output is "true" if either, but not both, of the inputs are "true."
     </string>
+    <string-array name="Instruction_manual_title">
+        <item>
+            Welcome to Circuit Training
+        </item>
+        <item></item>
+        <item>
+            Switches
+        </item>
+        <item>
+            Bulbs
+        </item>
+        <item>
+            Logic Gates
+        </item>
+        <item>
+            Wires
+        </item>
+        <item>
+            Completing the Circuit
+        </item>
+        <item></item>
+
+    </string-array>
+    <string-array name="instruction_manual">
+        <item>
+            This is a application to teach you about logic gates.\n
+            Logic gates are extremely useful, and are the building blocks for all digital circuits.\n
+            The microchips that we use in our computers contain logic gates!
+        </item>
+        <item>
+            You will be set a series of challenges to complete a problem using logic gates.
+            Each game board begins with 2 basic elements: Switches and Light Bulbs.
+        </item>
+
+        <item>
+            Switches can be switched on and off.When they are switched on they will emit a positive charge -
+            like a light switch!\n
+            Like ordinary light bulbs, the bulbs will switch on when they get a current.
+        </item>
+        <item>
+            To add a logic gate, press the \"Select Gate\" button.\n
+            This will show you the 7 logic gates you can use in your circuit\n
+            If you are new to logic gates or unsure what the gates do,
+            click the \"More Info\" button to find out more about the gate.\n
+        </item>
+        <item>
+            To add a wire to the circuit, click the \"Add Wire\" button to enter "Add Wire" mode.\n
+            To begin adding a wire, press and hold the place you wish the wire to start.\n
+            To end the wire, press and hold the component you wish to connect the wire to.\n
+            It is worth noting that wires cannot start and end in the same place.\n
+            Wire can also not end on a power switch ,or begin from a bulb.
+        </item>
+        <item>
+            To complete the puzzle you must use logic gates and wires to connect the
+            switches and the bulbs together.\n
+            The circuits must also be complete. To do this all power switches must be part of
+            the circuit and all logic gates must also be connected fully.
+        </item>
+        <item>
+            This means that they must have 2 inputs (apart from NOT gates which only have 1 input)
+            and they must also have an output.
+            So ....are you ready to start?
+        </item>
+
+    </string-array>
 
 </resources>

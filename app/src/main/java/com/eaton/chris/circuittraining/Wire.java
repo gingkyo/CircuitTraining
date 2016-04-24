@@ -38,13 +38,8 @@ public class Wire
     public boolean isLive() {
         return isLive;
     }
-    public void buildWireCoords(View start, View end, boolean startsAtPowerButton) {
-        float startX = start.getX();
-        if (!startsAtPowerButton)
-            startX += start.getWidth();
-        float startY = (start.getHeight() / 2) + start.getY();
-        float endY = (end.getHeight() / 2) + end.getY();
-        float[] wireCoords = {startX, startY, end.getX(), endY};
+
+    public void setWireCoords(float[] wireCoords){
         this.wireCoords=wireCoords;
     }
 }

@@ -6,4 +6,7 @@
         <declare-styleable name="PowerButton">
 
         </declare-styleable>
+        <declare-styleable name="LightBulb">
+
+        </declare-styleable>
     </resources>

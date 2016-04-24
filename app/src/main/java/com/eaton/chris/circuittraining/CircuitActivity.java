@@ -1,7 +1,9 @@
 package com.eaton.chris.circuittraining;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,8 @@ public class CircuitActivity extends Activity
     private View startOfWire=null;
     private boolean addWireMode=false;
     private TextView addWireLabel;
+    LightBulb bulb_0;
+    LightBulb bulb_1;
 
     private PowerButton powerButton_1,powerButton_2,powerButton_3;
 
@@ -55,6 +60,12 @@ public class CircuitActivity extends Activity
         powerButton_3.setOnClickListener(this);
         powerButton_3.setOnLongClickListener(this);
 
+        bulb_0=(LightBulb)findViewById(R.id.imageView_bulb_0);
+        bulb_0.setOnLongClickListener(this);
+
+        bulb_1=(LightBulb)findViewById(R.id.imageView_bulb_1);
+        bulb_1.setOnLongClickListener(this);
+
         Button addWire=(Button)findViewById(R.id.button_add_wire);
         addWire.setOnClickListener(this);
 
@@ -74,6 +85,33 @@ public class CircuitActivity extends Activity
         else {
             gridView.setAdapter(new ImageCellAdapter(this));
         }
+
+        AlertDialog.Builder ad = new AlertDialog.Builder(this);
+        ad.setTitle("Welcome");
+        ad.setMessage("Read Instructions?");
+        ad.setCancelable(true);
+
+        ad.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent instructionIntent=new Intent(CircuitActivity.this,InstructionsActivity.class);
+                        startActivity(instructionIntent);
+                    }
+                });
+
+        ad.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = ad.create();
+        alert.show();
+
+
     }
     public boolean startDrag (View v) {
 
@@ -155,6 +193,11 @@ public class CircuitActivity extends Activity
     public boolean onLongClick(View view) {
         if(addWireMode) {
             if (startOfWire == null) {
+                if(viewIsLightBulb(view)){
+                    toast("wire cannot start from a bulb");
+                    setAddWireMode(false);
+                    return false;
+                }
                 startOfWire = view;
                 return true;
             }
@@ -175,8 +218,15 @@ public class CircuitActivity extends Activity
                 ImageCell startCell = (ImageCell) startOfWire;
                 startPoint = startCell.getGate();
             }
-            ImageCell endOfWire = (ImageCell) view;
-            CircuitComponent endPoint = endOfWire.getGate();
+            CircuitComponent endPoint;
+            View endOfWire;
+            if(viewIsLightBulb(view)){
+               endPoint=(CircuitComponent)view;
+
+            } else{
+                ImageCell temp = (ImageCell) view;
+                endPoint = temp.getGate();
+            }
             Wire wire = new Wire(wireSurface, startPoint, endPoint);
             if (!startPoint.setOutput(wire)) {
                 toast("Cannot add a second output wire");
@@ -188,8 +238,7 @@ public class CircuitActivity extends Activity
                 setAddWireMode(false);
                 return false;
             }
-            wire.buildWireCoords(startOfWire, endOfWire,
-                    viewIsPowerButton(startOfWire));
+            wire.setWireCoords(buildWireCoords(startOfWire, view));
             wireSurface.wireArray.add(wire);
             wire.setIsLive(startPoint.isLive());
         }
@@ -260,6 +309,9 @@ public class CircuitActivity extends Activity
         return view.equals(powerButton_1)|view.equals(powerButton_2)
                 |view.equals(powerButton_3);
     }
+    public boolean viewIsLightBulb(View view){
+        return view.equals(bulb_0)||view.equals(bulb_1);
+    }
     public void setAddWireMode(boolean isAddWireMode){
         addWireMode=isAddWireMode;
         startOfWire=null;
@@ -268,5 +320,23 @@ public class CircuitActivity extends Activity
         } else {
             addWireLabel.setVisibility(View.INVISIBLE);
         }
+    }
+    public float[] buildWireCoords(View start, View end) {
+        float startX = start.getX();
+        float endX;
+        float endY;
+        if (!viewIsPowerButton(start))
+            startX += start.getWidth();
+        if(viewIsLightBulb(end)){
+            View parent=(View)end.getParent();
+            endX=parent.getX();
+            endY=end.getY()+(end.getHeight()/2);
+        }else{
+            endX= end.getX();
+            endY = (end.getHeight() / 2) + end.getY();
+        }
+        float startY = (start.getHeight() / 2) + start.getY();
+        float[] wireCoords = {startX, startY, endX, endY};
+        return wireCoords;
     }
 }
