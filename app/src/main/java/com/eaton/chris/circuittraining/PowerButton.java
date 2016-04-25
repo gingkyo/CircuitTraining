@@ -18,12 +18,12 @@ public class PowerButton extends ImageView implements CircuitComponent{
 
     }
     public void updateSignal(){
-        if(isLive){
-            setImageResource(power_off);
-            isLive=false;
-        } else{
+        if(!isLive){
             setImageResource(power_on);
             isLive=true;
+        } else{
+            setImageResource(power_off);
+            isLive=false;
         }
         if(output!=null){
             output.setIsLive(isLive);

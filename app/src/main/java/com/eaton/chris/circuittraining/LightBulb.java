@@ -10,6 +10,8 @@ import android.widget.ImageView;
 public class LightBulb extends ImageView implements CircuitComponent {
     private Wire wire;
     private boolean isLive;
+    private static final int bulb_on = R.drawable.bulb_on;
+    private static final int bulb_off = R.drawable.bulb_off;
 
     public LightBulb(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -31,7 +33,13 @@ public class LightBulb extends ImageView implements CircuitComponent {
 
     @Override
     public void updateSignal() {
-
+        if(wire.isLive()){
+            setImageResource(bulb_on);
+            isLive=true;
+        } else {
+            setImageResource(bulb_off);
+            isLive=false;
+        }
     }
 
     @Override

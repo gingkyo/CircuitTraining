@@ -2,7 +2,6 @@ package com.eaton.chris.circuittraining;
 
 
 import android.graphics.Color;
-import android.view.View;
 
 public class Wire
 {
@@ -31,8 +30,6 @@ public class Wire
     }
     public void drawWire(){
         wireSurface.setPaint(setLiveColor());
-        //wireSurface.setLineCoords(wireCoords);
-        //wireSurface.isNewWire = true;
         wireSurface.start();
     }
     public boolean isLive() {
