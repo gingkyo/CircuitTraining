@@ -45,7 +45,7 @@ public class CircuitActivity extends Activity
     private PowerButton powerButton_1, powerButton_2, powerButton_3;
     private static boolean[] level0 = {true, true, true, true, true};
     private static boolean[] level1 = {true, true, true, false, false};
-    private static boolean[] level2 = {false, false, true, true, true};
+    private static boolean[] level2 = {false, false, false, true, true};
     private static boolean[] level3 = {true, true, false, false, false};
     private static boolean[] level4 = {false, false, false, true, false};
 
@@ -104,13 +104,8 @@ public class CircuitActivity extends Activity
         addWireLabel = (TextView) findViewById(R.id.textView_addWireLabel);
         addWireLabel.setVisibility(View.INVISIBLE);
 
-        GridView gridView = (GridView) findViewById(R.id.image_grid_view);
+        setNewGridView();
 
-        if (gridView == null)
-            toast("Unable to find GridView");
-        else {
-            gridView.setAdapter(new ImageCellAdapter(this));
-        }
         questionText=getResources().getStringArray(R.array.questions);
         question = (TextView) findViewById(R.id.question_textView);
         question.setText(questionText[currentLevel]);
@@ -138,6 +133,7 @@ public class CircuitActivity extends Activity
                             public void onClick(DialogInterface dialog, int id) {
                                 currentLevel++;
                                 question.setText(questionText[currentLevel]);
+                                resetGameBoard();
                             }
                         });
             }
@@ -435,6 +431,15 @@ public class CircuitActivity extends Activity
         }
         return true;
     }
+    public void setNewGridView(){
+        GridView gridView = (GridView) findViewById(R.id.image_grid_view);
+
+        if (gridView == null)
+            toast("Unable to find GridView");
+        else {
+            gridView.setAdapter(new ImageCellAdapter(this));
+        }
+    }
 
     public static boolean[] getWinCondition(int level) {
         if (level == 0) {
@@ -447,5 +452,13 @@ public class CircuitActivity extends Activity
             return level3;
         }
         return level4;
+    }
+    public void resetGameBoard(){
+        setNewGridView();
+        for(CircuitComponent c :mainComponents){
+            c.resetComponent();
+        }
+        wireSurface.wireArray=new ArrayList<>();
+        wireSurface.resetCanvas();
     }
 }

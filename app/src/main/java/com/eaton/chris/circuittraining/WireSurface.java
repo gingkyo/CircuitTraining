@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -66,7 +67,11 @@ public class WireSurface extends SurfaceView implements Runnable {
             myHolder.unlockCanvasAndPost(canvas);
             stop();
         }
-
+    }
+    public void resetCanvas(){
+        Canvas canvas=myHolder.lockCanvas();
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        myHolder.unlockCanvasAndPost(canvas);
 
     }
 }

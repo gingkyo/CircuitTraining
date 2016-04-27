@@ -36,17 +36,20 @@ public class PowerButton extends ImageView implements CircuitComponent{
         output=wire;
         return true;
     }
+
     public void setGameManager(GameManager gm){
         gameManager=gm;
-    }
-    public void setIsLive(boolean isLive){
-        this.isLive=isLive;
     }
     public boolean isLive() {
         return isLive;
     }
     public boolean addInput(Wire wire){
         return false;
+    }
+    public void resetComponent(){
+        output=null;
+        setImageResource(power_off);
+        isLive=false;
     }
 
 }

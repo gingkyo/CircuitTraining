@@ -41,12 +41,11 @@ public class LightBulb extends ImageView implements CircuitComponent {
             isLive=false;
         }
     }
-
-    @Override
-    public void setIsLive(boolean isLive) {
-        this.isLive=isLive;
+    public void resetComponent(){
+        wire=null;
+        isLive=false;
+        setImageResource(bulb_off);
     }
-
     @Override
     public boolean isLive() {
         return isLive;

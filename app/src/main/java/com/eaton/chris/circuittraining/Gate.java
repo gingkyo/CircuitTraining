@@ -22,9 +22,6 @@ public class Gate implements CircuitComponent{
         output=wire;
         return true;
     }
-    public void setIsLive(boolean isLive){
-        this.isLive=isLive;
-    }
     public boolean isLive() {
         return isLive;
     }
@@ -84,6 +81,7 @@ public class Gate implements CircuitComponent{
             }
         }
     }
+    public void resetComponent(){}
     public String getGateType(){
         return gateType;
     }
