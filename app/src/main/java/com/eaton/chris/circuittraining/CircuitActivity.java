@@ -19,23 +19,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class CircuitActivity extends Activity
         implements View.OnDragListener,
         View.OnClickListener,
         View.OnLongClickListener,
-        View.OnTouchListener
-{
+        View.OnTouchListener {
     WireSurface wireSurface;
     private DragSource dragSource;
     private String currentDraggableGate;
-    private ImageCell lastNewCell=null;
-    private View startOfWire=null;
-    private boolean addWireMode=false;
+    private ImageCell lastNewCell = null;
+    private View startOfWire = null;
+    private boolean addWireMode = false;
     private TextView addWireLabel;
-    LightBulb bulb_0;
-    LightBulb bulb_1;
+    private LightBulb bulb_0;
+    private LightBulb bulb_1;
+    private GameManager gameManager;
+    public ArrayList<Gate> gateList;
+    private ArrayList<CircuitComponent> mainComponents;
+    private int currentLevel;
+    private TextView question;
+    String [] questionText;
 
-    private PowerButton powerButton_1,powerButton_2,powerButton_3;
+    private PowerButton powerButton_1, powerButton_2, powerButton_3;
+    private static boolean[] level0 = {true, true, true, true, true};
+    private static boolean[] level1 = {true, true, true, false, false};
+    private static boolean[] level2 = {false, false, true, true, true};
+    private static boolean[] level3 = {true, true, false, false, false};
+    private static boolean[] level4 = {false, false, false, true, false};
 
     @Override
     protected void onResume() {
@@ -46,36 +58,50 @@ public class CircuitActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.circuit_screen);
-
-        wireSurface= (WireSurface)findViewById(R.id.surfaceView_wireCanvas);
-        powerButton_1 =(PowerButton) findViewById(R.id.imageView_power_1);
+        currentLevel = 0;
+        gateList = new ArrayList<>();
+        mainComponents = new ArrayList<>();
+        gameManager = new GameManager();
+        wireSurface = (WireSurface) findViewById(R.id.surfaceView_wireCanvas);
+        powerButton_1 = (PowerButton) findViewById(R.id.imageView_power_1);
         powerButton_1.setOnClickListener(this);
         powerButton_1.setOnLongClickListener(this);
+        powerButton_1.setGameManager(gameManager);
+        mainComponents.add(powerButton_1);
 
-        powerButton_2 =(PowerButton)findViewById(R.id.imageView_power_2);
+        powerButton_2 = (PowerButton) findViewById(R.id.imageView_power_2);
         powerButton_2.setOnClickListener(this);
         powerButton_2.setOnLongClickListener(this);
+        powerButton_2.setGameManager(gameManager);
+        mainComponents.add(powerButton_2);
 
-        powerButton_3 =(PowerButton)findViewById(R.id.imageView_power_3);
+
+        powerButton_3 = (PowerButton) findViewById(R.id.imageView_power_3);
         powerButton_3.setOnClickListener(this);
         powerButton_3.setOnLongClickListener(this);
+        powerButton_3.setGameManager(gameManager);
+        mainComponents.add(powerButton_3);
 
-        bulb_0=(LightBulb)findViewById(R.id.imageView_bulb_0);
+
+        bulb_0 = (LightBulb) findViewById(R.id.imageView_bulb_0);
         bulb_0.setOnLongClickListener(this);
+        mainComponents.add(bulb_0);
 
-        bulb_1=(LightBulb)findViewById(R.id.imageView_bulb_1);
+
+        bulb_1 = (LightBulb) findViewById(R.id.imageView_bulb_1);
         bulb_1.setOnLongClickListener(this);
+        mainComponents.add(bulb_1);
 
-        Button addWire=(Button)findViewById(R.id.button_add_wire);
+        Button addWire = (Button) findViewById(R.id.button_add_wire);
         addWire.setOnClickListener(this);
 
-        Button selectGate=(Button)findViewById(R.id.button_select_gate);
+        Button selectGate = (Button) findViewById(R.id.button_select_gate);
         selectGate.setOnClickListener(this);
 
-        Button undoLast=(Button)findViewById(R.id.button_undo_gate);
+        Button undoLast = (Button) findViewById(R.id.button_undo_gate);
         undoLast.setOnClickListener(this);
 
-        addWireLabel=(TextView)findViewById(R.id.textView_addWireLabel);
+        addWireLabel = (TextView) findViewById(R.id.textView_addWireLabel);
         addWireLabel.setVisibility(View.INVISIBLE);
 
         GridView gridView = (GridView) findViewById(R.id.image_grid_view);
@@ -85,35 +111,59 @@ public class CircuitActivity extends Activity
         else {
             gridView.setAdapter(new ImageCellAdapter(this));
         }
+        questionText=getResources().getStringArray(R.array.questions);
+        question = (TextView) findViewById(R.id.question_textView);
+        question.setText(questionText[currentLevel]);
+        addAlertBox(true, "Welcome", "Read Instructions?");
+    }
 
+    public void addAlertBox(boolean isIntructions, String title, String message) {
         AlertDialog.Builder ad = new AlertDialog.Builder(this);
-        ad.setTitle("Welcome");
-        ad.setMessage("Read Instructions?");
-        ad.setCancelable(true);
-
-        ad.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent instructionIntent=new Intent(CircuitActivity.this,InstructionsActivity.class);
-                        startActivity(instructionIntent);
-                    }
-                });
-
-        ad.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+        ad.setTitle(title);
+        ad.setMessage(message);
+        ad.setCancelable(isIntructions);
+        if (!isIntructions) {
+            if (currentLevel == 4) {
+                ad.setPositiveButton(
+                        "Exit",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish();
+                            }
+                        });
+            } else {
+                ad.setPositiveButton(
+                        "Next",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                currentLevel++;
+                                question.setText(questionText[currentLevel]);
+                            }
+                        });
+            }
+        } else {
+            ad.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent instructionIntent = new Intent(CircuitActivity.this, InstructionsActivity.class);
+                            startActivity(instructionIntent);
+                        }
+                    });
+            ad.setNegativeButton(
+                    "No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+        }
 
         AlertDialog alert = ad.create();
         alert.show();
-
-
     }
-    public boolean startDrag (View v) {
+
+    public boolean startDrag(View v) {
 
         boolean isDragSource = false;
         DragSource ds = null;
@@ -124,13 +174,14 @@ public class CircuitActivity extends Activity
 
         }
         if (!isDragSource) return false;
-        if (!ds.allowDrag ()) return false;
+        if (!ds.allowDrag()) return false;
         dragSource = ds;
-        ClipData dragData = ClipData.newPlainText("","");
-        View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
+        ClipData dragData = ClipData.newPlainText("", "");
+        View.DragShadowBuilder shadowView = new View.DragShadowBuilder(v);
         v.startDrag(dragData, shadowView, ds, 0);
         return true;
     }
+
     public void addNewImageToScreen() {
         if (lastNewCell != null) lastNewCell.setVisibility(View.GONE);
 
@@ -152,48 +203,61 @@ public class CircuitActivity extends Activity
             newView.setOnTouchListener(this);
         }
     }
+
     public void toast(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==1){
-            if(resultCode==CircuitActivity.RESULT_OK){
-                currentDraggableGate=(String)data.getExtras().get("gateName");
+        if (requestCode == 1) {
+            if (resultCode == CircuitActivity.RESULT_OK) {
+                currentDraggableGate = (String) data.getExtras().get("gateName");
                 addNewImageToScreen();
             }
-            if(resultCode==CircuitActivity.RESULT_CANCELED){
+            if (resultCode == CircuitActivity.RESULT_CANCELED) {
                 toast("Cancelled");
             }
         }
     }
+
     @Override
     public void onClick(View view) {
-        if(!addWireMode){
-            int id= (view.getId());
-            if(id== R.id.button_select_gate) {
-                Intent selectGate =new Intent(CircuitActivity.this,SelectGateActivity.class);
+        if (!addWireMode) {
+            int id = (view.getId());
+            if (id == R.id.button_select_gate) {
+                Intent selectGate = new Intent(CircuitActivity.this, SelectGateActivity.class);
                 startActivityForResult(selectGate, 1);
-            } else if(id==R.id.button_add_wire){
+            } else if (id == R.id.button_add_wire) {
                 setAddWireMode(true);
                 toast(currentDraggableGate);
-            } else if(id==R.id.button_undo_gate){
-                toast("TODO UNDO LAST BUTTON");//TODO
-            } else{
-                try{
+            } else if (id == R.id.button_undo_gate) {
+                toast("TODO UNDO LAST BUTTON");
+            } else {
+                try {
                     PowerButton powerButton = (PowerButton) view;
                     powerButton.updateSignal();
-                }catch(ClassCastException e){
+                    if (checkIsCircuit()) {
+                        if (checkWinCondition()) {
+                            if (currentLevel < 4) {
+                                addAlertBox(false, "Well Done", "load next puzzle?");
+                            } else {
+                                addAlertBox(false, "Well Done", "You are the Circuit Master!!");
+                            }
+                        }
+                    }
+                } catch (ClassCastException e) {
                     toast("button failed");
                 }
             }
         }
     }
+
     @Override
     public boolean onLongClick(View view) {
-        if(addWireMode) {
+        if (addWireMode) {
             if (startOfWire == null) {
-                if(viewIsLightBulb(view)){
+                if (viewIsLightBulb(view)) {
                     toast("wire cannot start from a bulb");
                     setAddWireMode(false);
                     return false;
@@ -219,11 +283,10 @@ public class CircuitActivity extends Activity
                 startPoint = startCell.getGate();
             }
             CircuitComponent endPoint;
-            View endOfWire;
-            if(viewIsLightBulb(view)){
-               endPoint=(CircuitComponent)view;
+            if (viewIsLightBulb(view)) {
+                endPoint = (CircuitComponent) view;
 
-            } else{
+            } else {
                 ImageCell temp = (ImageCell) view;
                 endPoint = temp.getGate();
             }
@@ -245,6 +308,7 @@ public class CircuitActivity extends Activity
         setAddWireMode(false);
         return false;
     }
+
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();
@@ -253,7 +317,9 @@ public class CircuitActivity extends Activity
         }
         return false;
     }
-    @Override public boolean onDrag (View view, DragEvent event) {
+
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
 
         boolean isDragSource = false, isDropTarget = false;
         DragSource source = null;
@@ -261,35 +327,37 @@ public class CircuitActivity extends Activity
         try {
             source = (DragSource) view;
             isDragSource = true;
-        } catch (ClassCastException ex) {}
+        } catch (ClassCastException ex) {
+        }
         try {
             target = (DropTarget) view;
             isDropTarget = true;
-        } catch (ClassCastException ex) {}
+        } catch (ClassCastException ex) {
+        }
 
         final int action = event.getAction();
 
-        switch(action) {
+        switch (action) {
 
             case DragEvent.ACTION_DRAG_STARTED:
 
                 if (isDragSource) {
                     if (source == dragSource) {
-                        if (source.allowDrag ()) {
+                        if (source.allowDrag()) {
                             return true;
                         }
                     } else {
-                        return isDropTarget && target.allowDrop (dragSource);
+                        return isDropTarget && target.allowDrop(dragSource);
                     }
                 } else {
                     return isDropTarget && target.allowDrop(dragSource);
                 }
             case DragEvent.ACTION_DRAG_ENTERED:
                 if (isDropTarget)
-                    return isDropTarget && target.onDragEnter (dragSource);
+                    return isDropTarget && target.onDragEnter(dragSource);
 
             case DragEvent.ACTION_DRAG_EXITED:
-                return isDropTarget && target.onDragExit (dragSource);
+                return isDropTarget && target.onDragExit(dragSource);
 
             case DragEvent.ACTION_DROP:
                 if (isDropTarget) {
@@ -297,7 +365,9 @@ public class CircuitActivity extends Activity
                         target.onDrop(dragSource);
                     }
                 }
-                target.setGate(GateUtility.buildGate(currentDraggableGate));
+                Gate newGate = GateUtility.buildGate(currentDraggableGate);
+                target.setGate(newGate);
+                gateList.add(newGate);
                 return isDropTarget;
 
             case DragEvent.ACTION_DRAG_ENDED:
@@ -305,38 +375,77 @@ public class CircuitActivity extends Activity
         }
         return false;
     }
-    public boolean viewIsPowerButton(View view){
-        return view.equals(powerButton_1)|view.equals(powerButton_2)
-                |view.equals(powerButton_3);
+
+    public boolean checkIsCircuit() {
+        if (gateList.size() > 0) {
+            for (Gate gate : gateList) {
+                if (!gate.isConnected()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
-    public boolean viewIsLightBulb(View view){
-        return view.equals(bulb_0)||view.equals(bulb_1);
+
+    public boolean viewIsPowerButton(View view) {
+        return view.equals(powerButton_1) | view.equals(powerButton_2)
+                | view.equals(powerButton_3);
     }
-    public void setAddWireMode(boolean isAddWireMode){
-        addWireMode=isAddWireMode;
-        startOfWire=null;
-        if(addWireMode){
+
+    public boolean viewIsLightBulb(View view) {
+        return view.equals(bulb_0) || view.equals(bulb_1);
+    }
+
+    public void setAddWireMode(boolean isAddWireMode) {
+        addWireMode = isAddWireMode;
+        startOfWire = null;
+        if (addWireMode) {
             addWireLabel.setVisibility(View.VISIBLE);
         } else {
             addWireLabel.setVisibility(View.INVISIBLE);
         }
     }
+
     public float[] buildWireCoords(View start, View end) {
         float startX = start.getX();
         float endX;
         float endY;
         if (!viewIsPowerButton(start))
             startX += start.getWidth();
-        if(viewIsLightBulb(end)){
-            View parent=(View)end.getParent();
-            endX=parent.getX();
-            endY=end.getY()+(end.getHeight()/2);
-        }else{
-            endX= end.getX();
+        if (viewIsLightBulb(end)) {
+            View parent = (View) end.getParent();
+            endX = parent.getX();
+            endY = end.getY() + (end.getHeight() / 2);
+        } else {
+            endX = end.getX();
             endY = (end.getHeight() / 2) + end.getY();
         }
         float startY = (start.getHeight() / 2) + start.getY();
         float[] wireCoords = {startX, startY, endX, endY};
         return wireCoords;
+    }
+
+    public boolean checkWinCondition() {
+        boolean[] solution = getWinCondition(currentLevel);
+        for (int i = 0; i < mainComponents.size(); i++) {
+            if (!solution[i] == mainComponents.get(i).isLive()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean[] getWinCondition(int level) {
+        if (level == 0) {
+            return level0;
+        } else if (level == 1) {
+            return level1;
+        } else if (level == 2) {
+            return level2;
+        } else if (level == 3) {
+            return level3;
+        }
+        return level4;
     }
 }

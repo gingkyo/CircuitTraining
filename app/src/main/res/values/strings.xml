@@ -92,5 +92,12 @@
         </item>
 
     </string-array>
+    <string-array name="questions">
+        <item>When all 3 switches are on both bulbs are on</item>
+        <item>When all 3 switches are on both bulbs are off</item>
+        <item>When all switches are off all bulbs lit</item>
+        <item>When switch a and b are lit all bulbs are off</item>
+        <item>When all switches are off only the top bulb is on</item>
+    </string-array>
 
 </resources>

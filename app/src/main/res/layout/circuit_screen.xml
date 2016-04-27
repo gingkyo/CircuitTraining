@@ -168,9 +168,18 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/circuitSwitchPanel"
         android:id="@+id/circuitInfoPanel"
         >
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/question_textView"
+            style="@style/fontDefaultWhite"
+            />
     </LinearLayout>
 
 </RelativeLayout>
