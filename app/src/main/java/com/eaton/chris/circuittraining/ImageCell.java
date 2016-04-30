@@ -27,7 +27,7 @@ public class ImageCell extends ImageView
     }
     public boolean allowDrag () {
         //drag is limited to only the frame where the image is added and not within the grid
-        return cellNumber<0;
+        return cellNumber<0 && !isEmpty;
     }
     public boolean allowDrop (DragSource source) {
         return source!=this && isEmpty  && cellNumber >= 0;

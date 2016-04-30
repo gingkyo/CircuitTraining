@@ -158,7 +158,6 @@ public class CircuitActivity extends Activity
         AlertDialog alert = ad.create();
         alert.show();
     }
-
     public boolean startDrag(View v) {
 
         boolean isDragSource = false;
@@ -216,7 +215,6 @@ public class CircuitActivity extends Activity
             }
         }
     }
-
     @Override
     public void onClick(View view) {
         if (!addWireMode) {
@@ -226,7 +224,6 @@ public class CircuitActivity extends Activity
                 startActivityForResult(selectGate, 1);
             } else if (id == R.id.button_add_wire) {
                 setAddWireMode(true);
-                toast(currentDraggableGate);
             } else if (id == R.id.button_undo_gate) {
                 toast("TODO UNDO LAST BUTTON");
             } else {
@@ -453,8 +450,16 @@ public class CircuitActivity extends Activity
         }
         return level4;
     }
+    public void resetCurrentGate(){
+        lastNewCell.isEmpty=true;
+        lastNewCell.setVisibility(View.GONE);
+        currentDraggableGate=null;
+        lastNewCell.setOnClickListener(this);
+        lastNewCell.setOnTouchListener(this);
+    }
     public void resetGameBoard(){
         setNewGridView();
+        resetCurrentGate();
         for(CircuitComponent c :mainComponents){
             c.resetComponent();
         }
