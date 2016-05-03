@@ -10,7 +10,6 @@ public class PowerButton extends ImageView implements CircuitComponent{
     private boolean isLive;
     private static final int power_on = R.drawable.power_on;
     private static final int power_off = R.drawable.power_off;
-    private GameManager gameManager;
 
     public PowerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,9 +36,6 @@ public class PowerButton extends ImageView implements CircuitComponent{
         return true;
     }
 
-    public void setGameManager(GameManager gm){
-        gameManager=gm;
-    }
     public boolean isLive() {
         return isLive;
     }
@@ -50,6 +46,12 @@ public class PowerButton extends ImageView implements CircuitComponent{
         output=null;
         setImageResource(power_off);
         isLive=false;
+    }
+    public boolean isPowerButton(){
+        return true;
+    }
+    public boolean isLightBulb(){
+        return false;
     }
 
 }

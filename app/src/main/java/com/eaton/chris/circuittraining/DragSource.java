@@ -4,7 +4,7 @@ public interface DragSource {
 
     boolean allowDrag ();
 
-    void setGate(CircuitComponent gate);
-    CircuitComponent getGate();
+    void setGate(String gateType);
+    String getGate();
 
 }

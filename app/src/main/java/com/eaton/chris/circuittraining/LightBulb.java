@@ -50,4 +50,11 @@ public class LightBulb extends ImageView implements CircuitComponent {
     public boolean isLive() {
         return isLive;
     }
+
+    public boolean isPowerButton(){
+        return false;
+    }
+    public boolean isLightBulb(){
+        return true;
+    }
 }

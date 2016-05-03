@@ -85,5 +85,11 @@ public class Gate implements CircuitComponent{
     public String getGateType(){
         return gateType;
     }
+    public boolean isPowerButton(){
+        return false;
+    }
+    public boolean isLightBulb(){
+        return false;
+    }
 }
 

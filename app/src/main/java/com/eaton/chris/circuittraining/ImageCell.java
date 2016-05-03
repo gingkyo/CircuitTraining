@@ -9,15 +9,24 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ImageCell extends ImageView
-        implements DragSource, DropTarget
+        implements DragSource, DropTarget,CircuitComponent
+
 {
     public boolean isEmpty = true;
     public int cellNumber = -1;
-    private CircuitComponent cellValue;
-
+    private String gateType;
+    private Wire conn1;
+    private Wire conn2;
+    private Wire output;
+    private boolean isLive;
 
     public ImageCell (Context context) {
         super (context);
+        this.gateType="";
+        conn1=null;
+        conn2=null;
+        output=null;
+        isLive=false;
     }
     public ImageCell (Context context, AttributeSet attrs) {
         super (context, attrs);
@@ -41,7 +50,6 @@ public class ImageCell extends ImageView
         ImageView sourceView = (ImageView) source;
         Drawable d = sourceView.getDrawable ();
         if (d != null) {
-            this.setGate(source.getGate());
             this.setImageDrawable(d);
             this.invalidate();
             this.setOnLongClickListener((View.OnLongClickListener)getContext());
@@ -59,12 +67,95 @@ public class ImageCell extends ImageView
         setBackgroundResource (bg);
         return true;
     }
-    public void setGate(CircuitComponent gate){
-        cellValue=gate;
+    public void setGate(String gateType){
+        this.gateType=gateType;
     }
-    public CircuitComponent getGate()
+    public String getGate()
     {
-        return cellValue;
+        return gateType;
+    }
+    @Override
+    public boolean setOutput(Wire wire) {
+        if(output!=null)
+            return false;
+        output=wire;
+        return true;
+    }
+    @Override
+    public boolean addInput(Wire wire) {
+        if(isConnected()){
+            return false;
+        }
+        if(conn1==null){
+            conn1=wire;
+            if(gateType.equals("notGate")) return true;
+        }
+        else{
+            conn2=wire;
+        }
+        return true;
+    }
+    @Override
+    public void updateSignal() {
+        if (isConnected()) {
+            switch (gateType) {
+                case "notGate":
+                    isLive = !conn1.isLive();
+                    break;
+                case "andGate":
+                    isLive = conn1.isLive() && conn2.isLive();
+                    break;
+                case "orGate":
+                    isLive = conn2.isLive() || conn1.isLive();
+                    break;
+                case "xorGate":
+                    if (conn1.isLive() && conn2.isLive()) {
+                        isLive = false;
+                        break;
+                    }
+                    isLive = conn1.isLive() || conn2.isLive();
+                    break;
+                case "nandGate":
+                    if(conn1.isLive() && conn2.isLive()){
+                        isLive=false;
+                        break;
+                    }
+                    isLive=true;
+                    break;
+                case "norGate":
+                    isLive = !conn1.isLive() && !conn2.isLive();
+                    break;
+                case "xnorGate":
+                    boolean dbleNegative = !conn1.isLive() && !conn2.isLive();
+                    isLive = conn1.isLive() && conn2.isLive() || dbleNegative;
+                    break;
+            }
+            if(output!=null){
+                output.setIsLive(isLive);
+            }
+        }
+    }
+    public String getGateType(){
+        return gateType;
     }
 
+    @Override
+    public boolean isLive() {
+        return isLive;
+    }
+    @Override
+    public void resetComponent() {
+    }
+    @Override
+    public boolean isPowerButton() {
+        return false;
+    }
+    @Override
+    public boolean isLightBulb() {
+        return false;
+    }
+    public boolean isConnected(){
+        if(gateType.equals("notGate")) return conn1!=null;
+        return conn1!=null && conn2!=null;
+    }
 }
