@@ -41,9 +41,8 @@ public class CircuitActivity extends Activity
     GameManager gameManager;
 
     private SensorManager mSensorManager;
-    private float mAccel; // acceleration apart from gravity
-    private float mAccelCurrent; // current acceleration including gravity
-    private float mAccelLast; // last acceleration including gravity
+    private float accel; // acceleration apart from gravity
+    private float currentAccel; // current acceleration including gravity
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
 
@@ -51,12 +50,14 @@ public class CircuitActivity extends Activity
             float x = se.values[0];
             float y = se.values[1];
             float z = se.values[2];
-            mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
-            float delta = mAccelCurrent - mAccelLast;
-            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-            if(mAccel>12){
-            toast("shake it!");}
+            float oldAccel = currentAccel;
+            currentAccel = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            float delta = currentAccel - oldAccel;
+            accel = accel * 0.9f + delta; // perform low-cut filter
+            if(accel>10){
+                resetGameBoard();
+                toast("Reset");
+            }
         }
 
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -73,6 +74,7 @@ public class CircuitActivity extends Activity
 
         gameManager=new GameManager(this);
         wireSurface = (WireSurface) findViewById(R.id.surfaceView_wireCanvas);
+        wireSurface.start();
         PowerButton powerButton_1 = (PowerButton) findViewById(R.id.imageView_power_1);
         powerButton_1.setOnClickListener(this);
         powerButton_1.setOnLongClickListener(this);
@@ -80,9 +82,8 @@ public class CircuitActivity extends Activity
 
         mSensorManager= (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
-        mAccel = 0.00f;
-        mAccelCurrent = SensorManager.GRAVITY_EARTH;
-        mAccelLast = SensorManager.GRAVITY_EARTH;
+        accel = 0.00f;
+        currentAccel = SensorManager.GRAVITY_EARTH;
 
 
         PowerButton powerButton_2 = (PowerButton) findViewById(R.id.imageView_power_2);
@@ -234,7 +235,8 @@ public class CircuitActivity extends Activity
             } else if (id == R.id.button_add_wire) {
                 setAddWireMode(true);
             } else if (id == R.id.button_undo_gate) {
-                toast("TODO UNDO LAST BUTTON");
+                resetGameBoard();
+                toast("Reset");
             } else {
                 try {
                     PowerButton powerButton = (PowerButton) view;
@@ -298,10 +300,7 @@ public class CircuitActivity extends Activity
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         final int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
-            return startDrag(view);
-        }
-        return false;
+        return action == MotionEvent.ACTION_DOWN && startDrag(view);
     }
     @Override
     public boolean onDrag(View view, DragEvent event) {

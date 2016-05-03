@@ -5,6 +5,9 @@
     <integer name="num_images">32</integer>
     <integer name="num_columns">8</integer>
     <string name="wire_mode_label">*Wire*\nMode</string>
+    <string name="addWireButton">Add Wire</string>
+    <string name="selectGateButton">Select Gate</string>
+    <string name="undoButton">Undo</string>
     <string name="splash_screen_title"> Circuit\nTraining</string>
     <string name="splash_screen_hint_text">Click to Begin</string>
     <string name="and_gate">
@@ -31,7 +34,7 @@
         <item>
             Welcome to Circuit Training
         </item>
-        <item></item>
+        <item> </item>
         <item>
             Switches
         </item>
@@ -47,7 +50,7 @@
         <item>
             Completing the Circuit
         </item>
-        <item></item>
+        <item> </item>
 
     </string-array>
     <string-array name="instruction_manual">
@@ -83,11 +86,13 @@
             To complete the puzzle you must use logic gates and wires to connect the
             switches and the bulbs together.\n
             The circuits must also be complete. To do this all power switches must be part of
-            the circuit and all logic gates must also be connected fully.
-        </item>
-        <item>
+            the circuit and all logic gates must also be connected fully.\n
             This means that they must have 2 inputs (apart from NOT gates which only have 1 input)
             and they must also have an output.
+        </item>
+        <item>
+            If you make a mistake you can restart the circuit by
+            shaking your device, or pressing the \"Undo\" button.
             So ....are you ready to start?
         </item>
 

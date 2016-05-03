@@ -15,20 +15,18 @@
             android:id="@+id/button_add_wire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Add Wire"
+            android:text="@string/addWireButton"
             style="@style/buttonStyling"
             />
         <Button
             android:id="@+id/button_select_gate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Select Gate"
+            android:text="@string/selectGateButton"
             style="@style/buttonStyling"
             />
         <FrameLayout
@@ -49,10 +47,9 @@
             android:id="@+id/button_undo_gate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Undo Last"
+            android:text="@string/undoButton"
             style="@style/buttonStyling"
             />
 
@@ -62,7 +59,7 @@
         android:orientation="vertical"
         android:layout_width="75dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/circuitTopPanel"
         android:id="@+id/circuitSwitchPanel"
 
@@ -111,8 +108,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/circuitMainPanel"
-        android:layout_toRightOf="@+id/circuitSwitchPanel"
-        android:layout_toLeftOf="@+id/circuitBulbPanel"
+        android:layout_toEndOf="@+id/circuitSwitchPanel"
+        android:layout_toStartOf="@+id/circuitBulbPanel"
         android:layout_below="@+id/circuitTopPanel"
         android:layout_above="@+id/circuitInfoPanel"
 
@@ -142,7 +139,7 @@
         android:layout_width="75dp"
         android:layout_height="match_parent"
         android:id="@+id/circuitBulbPanel"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/circuitTopPanel"
         android:layout_above="@id/circuitInfoPanel"
         >
@@ -168,7 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/circuitSwitchPanel"
+        android:layout_toEndOf="@+id/circuitSwitchPanel"
         android:id="@+id/circuitInfoPanel"
         >
 
