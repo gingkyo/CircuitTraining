@@ -117,7 +117,6 @@ public class CircuitActivity extends Activity
 
         setNewGridView();
 
-        //questionText=getResources().getStringArray(R.array.questions);
         question = (TextView) findViewById(R.id.question_textView);
         question.setText(gameManager.getCurrentQuestion());
         addAlertBox(true, "Welcome", "Read Instructions?");
@@ -165,7 +164,6 @@ public class CircuitActivity extends Activity
                         }
                     });
         }
-
         AlertDialog alert = ad.create();
         alert.show();
     }

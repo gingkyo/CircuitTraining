@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectGateActivity extends Activity implements View.OnClickListener  {
-    ArrayList<Gate> gateList;
     private GateListAdapter adapter;
     GridView listView;
 
@@ -29,7 +28,7 @@ public class SelectGateActivity extends Activity implements View.OnClickListener
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             Intent returnIntent= new Intent();
-            returnIntent.putExtra("gateName",adapter.getItem(position).getGateType());
+            returnIntent.putExtra("gateName",adapter.getItem(position));
             setResult(CircuitActivity.RESULT_OK, returnIntent);
             finish();
         }
@@ -40,8 +39,7 @@ public class SelectGateActivity extends Activity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_gate);
         listView=(GridView)findViewById(R.id.selectGate_listView);
-        gateList=GateUtility.buildFullGateList();
-        adapter=new GateListAdapter(this,R.layout.activity_select_gate,gateList);
+        adapter=new GateListAdapter(this,R.layout.activity_select_gate,GateUtility.buildFullGateList());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(selectGateItemHandler);
 
@@ -55,23 +53,22 @@ public class SelectGateActivity extends Activity implements View.OnClickListener
 
     }
 }
-class GateListAdapter extends ArrayAdapter<Gate>{
-    private ArrayList<Gate> gates;
+class GateListAdapter extends ArrayAdapter<String>{
+    private ArrayList<String> gates;
 
     LayoutInflater layoutInflater=(LayoutInflater)getContext()
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    public GateListAdapter(Context context, int resource, List<Gate> objects) {
+    public GateListAdapter(Context context, int resource, List<String> objects) {
         super(context, resource, objects);
-        this.gates=(ArrayList<Gate>)objects;
+        this.gates=(ArrayList<String>)objects;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView ==null){
             convertView=layoutInflater.inflate(R.layout.gate_list_item_layout,null);
         }
-        Gate gateItem=gates.get(position);
-        String gateType=gateItem.getGateType();
+        String gateType=gates.get(position);
         ((ImageView)convertView.findViewById(R.id.gateList_imageView))
                 .setImageResource(GateUtility.getGateImageByName(gateType));
         ((TextView)convertView.findViewById(R.id.gateList_label_textView))

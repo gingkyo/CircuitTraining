@@ -3,34 +3,16 @@ package com.eaton.chris.circuittraining;
 import java.util.ArrayList;
 
 public abstract class GateUtility {
-    public static Gate buildGate(String gateType){
-        switch(gateType){
-            case "andGate":
-                return new Gate("andGate");
-            case "nandGate":
-                return new Gate("nandGate");
-            case "norGate":
-                return new Gate("norGate");
-            case "notGate":
-                return new Gate("notGate");
-            case "orGate":
-                return new Gate("orGate");
-            case "xnorGate":
-                return new Gate("xnorGate");
-            case "xorGate":
-                return new Gate("xorGate");
-        }
-        return null;
-    }
-    public static ArrayList<Gate> buildFullGateList() {
-        ArrayList<Gate>gates=new ArrayList<>();
-        gates.add(buildGate("andGate"));
-        gates.add(buildGate("nandGate"));
-        gates.add(buildGate("norGate"));
-        gates.add(buildGate("notGate"));
-        gates.add(buildGate("orGate"));
-        gates.add(buildGate("xnorGate"));
-        gates.add(buildGate("xorGate"));
+
+    public static ArrayList<String> buildFullGateList() {
+        ArrayList<String>gates=new ArrayList<>();
+        gates.add("andGate");
+        gates.add("nandGate");
+        gates.add("norGate");
+        gates.add("notGate");
+        gates.add("orGate");
+        gates.add("xnorGate");
+        gates.add("xorGate");
 
         return gates;
     }
