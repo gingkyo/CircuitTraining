@@ -34,12 +34,11 @@
         <item>
             Welcome to Circuit Training
         </item>
-        <item> </item>
         <item>
-            Switches
+            Instructions
         </item>
         <item>
-            Bulbs
+            Switches
         </item>
         <item>
             Logic Gates
@@ -48,9 +47,13 @@
             Wires
         </item>
         <item>
+        </item>
+        <item>
             Completing the Circuit
         </item>
-        <item> </item>
+        <item>
+            Undoing Mistakes
+        </item>
 
     </string-array>
     <string-array name="instruction_manual">
@@ -79,8 +82,10 @@
             To add a wire to the circuit, click the \"Add Wire\" button to enter "Add Wire" mode.\n
             To begin adding a wire, press and hold the place you wish the wire to start.\n
             To end the wire, press and hold the component you wish to connect the wire to.\n
+        </item>
+        <item>
             It is worth noting that wires cannot start and end in the same place.\n
-            Wire can also not end on a power switch ,or begin from a bulb.
+            Wires can also not end on a power switch ,or begin from a bulb.
         </item>
         <item>
             To complete the puzzle you must use logic gates and wires to connect the
