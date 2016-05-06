@@ -60,6 +60,7 @@
         android:layout_width="75dp"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/circuitTopPanel"
         android:id="@+id/circuitSwitchPanel"
 
@@ -109,7 +110,9 @@
         android:layout_height="match_parent"
         android:id="@+id/circuitMainPanel"
         android:layout_toEndOf="@+id/circuitSwitchPanel"
+        android:layout_toRightOf="@+id/circuitSwitchPanel"
         android:layout_toStartOf="@+id/circuitBulbPanel"
+        android:layout_toLeftOf="@+id/circuitBulbPanel"
         android:layout_below="@+id/circuitTopPanel"
         android:layout_above="@+id/circuitInfoPanel"
 
@@ -140,6 +143,7 @@
         android:layout_height="match_parent"
         android:id="@+id/circuitBulbPanel"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/circuitTopPanel"
         android:layout_above="@id/circuitInfoPanel"
         >
@@ -166,6 +170,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/circuitSwitchPanel"
+        android:layout_toRightOf="@+id/circuitSwitchPanel"
         android:id="@+id/circuitInfoPanel"
         >
 
