@@ -39,6 +39,7 @@ public class CircuitActivity extends Activity
     private boolean addWireMode = false;
     private TextView question;
     GameManager gameManager;
+    //boolean hasLoaded=false;
 
     private SensorManager mSensorManager;
     private float accel; // acceleration apart from gravity
@@ -378,11 +379,13 @@ public class CircuitActivity extends Activity
         }
     }
     public void resetCurrentGate(){
-        lastNewCell.isEmpty=true;
-        lastNewCell.setVisibility(View.GONE);
-        currentDraggableGate=null;
-        lastNewCell.setOnClickListener(this);
-        lastNewCell.setOnTouchListener(this);
+        if(lastNewCell!=null) {
+            lastNewCell.isEmpty = true;
+            lastNewCell.setVisibility(View.GONE);
+            currentDraggableGate = null;
+            lastNewCell.setOnClickListener(this);
+            lastNewCell.setOnTouchListener(this);
+        }
     }
     public void resetGameBoard(){
         setNewGridView();
